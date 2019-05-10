@@ -1,0 +1,18 @@
+---
+- name: 移除swap分区开机挂载 /etc/fstab
+  mount:
+    name: "{{ item }}"
+    fstype: swap
+    state: absent
+  with_items:
+    - swap
+    - none
+
+- name: 检查是否开启swap
+  command: /sbin/swapon -s
+  register: swapon
+  changed_when: no
+
+- name: 关闭swap
+  command: /sbin/swapoff -a
+  when: swapon.stdout
