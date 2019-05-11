@@ -1,0 +1,12 @@
+---
+- name: 创建 ansible 本地文件目录
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+   - "{{ local_dir }}/etcd-{{ etcd_ver }}"
+   - "{{ local_dir }}/k8s-{{ k8s_ver }}"
+
+- import_tasks: etcd.yml
+
+- import_tasks: k8s.yml
