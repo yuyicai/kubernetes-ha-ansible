@@ -15,5 +15,14 @@ k8s_ver: v1.14.1
 k8s_download_url: https://storage.googleapis.com.cnpmjs.org/kubernetes-release/release/{{ k8s_ver }}/kubernetes-server-linux-amd64.tar.gz
 
 
+# docker版本
+docker_ver: 18.06.3-ce
+# docker二进制下载地址：
+# https://mirror.azure.cn/docker-ce/linux/static/stable/x86_64/docker-{{ docker_ver }}.tgz 
+docker_download_url: https://mirrors.aliyun.com/docker-ce/linux/static/stable/x86_64/docker-{{ docker_ver }}.tgz 
+
 # 程序安装目录
 bin_dir: /usr/local/bin
+
+# docker安装目录
+docker_bin_dir: /usr/bin

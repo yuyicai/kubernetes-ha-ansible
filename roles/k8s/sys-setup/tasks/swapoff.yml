@@ -1,5 +1,5 @@
 ---
-- name: 移除 swap 分区开机挂载 /etc/fstab
+- name: 在 /etc/fstab 移除 swap 分区开机挂载 
   mount:
     name: "{{ item }}"
     fstype: swap

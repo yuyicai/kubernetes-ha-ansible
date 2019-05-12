@@ -1,0 +1,24 @@
+[Unit]
+Description=Docker Application Container Engine
+Documentation=http://docs.docker.com
+After=network.target docker.socket
+Wants=network.target
+Requires=docker.socket
+
+[Service]
+Type=notify
+ExecReload=/bin/kill -s HUP $MAINPID
+Delegate=yes
+KillMode=process
+ExecStart={{ docker_bin_dir }}/dockerd -H fd://
+TasksMax=infinity
+LimitNOFILE=1048576
+LimitNPROC=1048576
+LimitCORE=infinity
+TimeoutStartSec=30s
+Restart=on-failure
+StartLimitBurst=3
+StartLimitInterval=60s
+
+[Install]
+WantedBy=multi-user.target
