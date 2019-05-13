@@ -6,6 +6,7 @@
   with_items:
    - "{{ local_dir }}/etcd-{{ etcd_ver }}"
    - "{{ local_dir }}/k8s-{{ k8s_ver }}"
+   - "{{ local_dir }}/docker-{{ docker_ver }}"
 
 - import_tasks: dockre.yml
 

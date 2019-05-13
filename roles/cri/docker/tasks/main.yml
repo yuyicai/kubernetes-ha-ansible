@@ -4,6 +4,21 @@
     path: /etc/docker
     state: directory
 
+- name: 复制 
+  copy:
+    src: "{{ local_dir }}/docker-{{ docker_ver }}/{{ item }}"
+    dest: "{{ docker_bin_dir }}"
+    mode: 0644
+  with_items:
+    - docker
+    - docker-containerd
+    - docker-containerd-ctr
+    - docker-containerd-shim
+    - dockerd
+    - docker-init
+    - docker-proxy
+    - docker-runc
+
 - name: 创建 docker.service 文件
   template:
     src: docker.service.j2
