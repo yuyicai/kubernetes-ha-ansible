@@ -1,0 +1,19 @@
+---
+- name: 创建 docker 相关文件夹
+  file:
+    path: /etc/docker
+    state: directory
+
+- name: 创建 docker.service 文件
+  template:
+    src: docker.service.j2
+    dest: /etc/systemd/system/docker.service
+
+- name: systemd daemon_reload
+  systemd:
+    daemon_reload: yes
+
+- name: 启动 docker
+  systemd:
+    state: started
+    name: docker
