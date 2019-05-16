@@ -4,9 +4,9 @@
     path: "{{ item }}"
     state: directory
   with_items:
-   - "{{ local_dir }}/etcd-{{ etcd_ver }}"
-   - "{{ local_dir }}/k8s-{{ k8s_ver }}"
-   - "{{ local_dir }}/docker-{{ docker_ver }}"
+   - "{{ playbook_dir }}/files/etcd-{{ etcd_ver }}"
+   - "{{ playbook_dir }}/files/k8s-{{ k8s_ver }}"
+   - "{{ playbook_dir }}/files/docker-{{ docker_ver }}"
 
 - import_tasks: docker.yml
 
