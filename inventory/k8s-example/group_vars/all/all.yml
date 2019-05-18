@@ -1,7 +1,3 @@
-# 本地目录（ansible执行机器上的目录）
-# 用来存放下载的文件和生产的证书等
-local_dir: /opt/ansible
-
 # etcd 版本
 etcd_ver: v3.2.26
 # etcd下载地址

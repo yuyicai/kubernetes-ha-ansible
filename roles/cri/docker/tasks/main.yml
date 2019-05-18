@@ -6,7 +6,7 @@
 
 - name: 复制 docker二进制文件到目标主机
   copy:
-    src: "{{ local_dir }}/docker-{{ docker_ver }}/{{ item }}"
+    src: "{{ playbook_dir }}/files/docker-{{ docker_ver }}/{{ item }}"
     dest: "{{ docker_bin_dir }}"
     mode: 0755
   with_items:
