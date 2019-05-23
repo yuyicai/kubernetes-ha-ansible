@@ -1,0 +1,23 @@
+[ req ]
+default_bits = 2048
+default_md = sha256
+distinguished_name = dn
+
+[ dn ]
+
+[ v3_ca ]
+keyUsage = critical, digitalSignature, keyEncipherment, keyCertSign
+basicConstraints = critical, CA:true
+
+[ v3_ext_clien ]
+keyUsage= critical, digitalSignature, keyEncipherment
+extendedKeyUsage=clientAuth
+
+[ v3_ext_peer ]
+keyUsage = critical, digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth, clientAuth
+subjectAltName=@alt_names
+
+[ alt_names ]
+DNS.1 = localhost
+IP.1 = 127.0.0.1
