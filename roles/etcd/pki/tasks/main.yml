@@ -1,0 +1,46 @@
+---
+- name: 创建 pki 本地文件目录
+  file: 
+    path: "{{ playbook_dir }}/pki/etcd"
+    state: directory
+
+- name: 拷贝 etcd-csr.conf 
+  copy:
+    src: etcd-csr.conf
+    dest: "{{ playbook_dir }}/pki/etcd/etcd-csr.conf"
+    mode: 0600
+
+
+- name: 生成 etcd ca.key
+  shell: openssl genrsa -out ca.key 2048
+  args:
+    chdir: "{{ playbook_dir }}/pki/etcd"
+    creates: ca.key
+
+- name: 生成 etcd ca.crt
+  shell: openssl req -x509 -new -nodes -key ca.key -config etcd-csr.conf -subj "/CN=etcd-ca" -extensions v3_ca -days 3650 -out ca.crt
+  args:
+    chdir: "{{ playbook_dir }}/pki/etcd"
+    creates: ca.crt
+
+- name: 生成 etcd server.key、server.crt
+  shell: |
+    openssl genrsa -out server-{{ item }}.key 2048
+    openssl req -new  -key server-{{ item }}.key -subj "/CN=etcd-server" -reqexts v3_ext_peer -config <(cat etcd-csr.conf <(printf "\nIP.2 = {{ item }}")) -out server-{{ item }}.csr
+    openssl x509 -in server-{{ item }}.csr -req -CA ca.crt -CAkey ca.key -CAcreateserial -extensions v3_ext_peer -extfile <(cat etcd-csr.conf <(printf "\nIP.2 = {{ item }}")) -days 3650 -out server-{{ item }}.crt
+  args:
+    chdir: "{{ playbook_dir }}/pki/etcd"
+    executable: /bin/bash
+  with_items:
+      - "{{ groups.etcd }}"
+
+- name: 生成 etcd peer.key、peer.crt
+  shell: |
+    openssl genrsa -out peer-{{ item }}.key 2048
+    openssl req -new  -key peer-{{ item }}.key -subj "/CN=etcd-peer" -reqexts v3_ext_peer -config <(cat etcd-csr.conf <(printf "\nIP.2 = {{ item }}")) -out peer-{{ item }}.csr
+    openssl x509 -in peer-{{ item }}.csr -req -CA ca.crt -CAkey ca.key -CAcreateserial -extensions v3_ext_peer -extfile <(cat etcd-csr.conf <(printf "\nIP.2 = {{ item }}")) -days 3650 -out peer-{{ item }}.crt
+  args:
+    chdir: "{{ playbook_dir }}/pki/etcd"
+    executable: /bin/bash
+  with_items:
+      - "{{ groups.etcd }}"
