@@ -25,9 +25,9 @@
 
 - name: 生成 etcd server.key、server.crt
   shell: |
-    openssl genrsa -out server-{{ item }}.key 2048
-    openssl req -new  -key server-{{ item }}.key -subj "/CN=etcd-server" -reqexts v3_ext_peer -config <(cat etcd-csr.conf <(printf "\nIP.2 = {{ item }}")) -out server-{{ item }}.csr
-    openssl x509 -in server-{{ item }}.csr -req -CA ca.crt -CAkey ca.key -CAcreateserial -extensions v3_ext_peer -extfile <(cat etcd-csr.conf <(printf "\nIP.2 = {{ item }}")) -days 3650 -out server-{{ item }}.crt
+    openssl genrsa -out server-{{ hostvars[ item ].etcd_name }}.key 2048
+    openssl req -new  -key server-{{ hostvars[ item ].etcd_name }}.key -subj "/CN=etcd-server" -reqexts v3_ext_peer -config <(cat etcd-csr.conf <(printf "\nIP.2 = {{ item }}")) -out server-{{ hostvars[ item ].etcd_name }}.csr
+    openssl x509 -in server-{{ hostvars[ item ].etcd_name }}.csr -req -CA ca.crt -CAkey ca.key -CAcreateserial -extensions v3_ext_peer -extfile <(cat etcd-csr.conf <(printf "\nIP.2 = {{ item }}")) -days 3650 -out server-{{ hostvars[ item ].etcd_name }}.crt
   args:
     chdir: "{{ playbook_dir }}/pki/etcd"
     executable: /bin/bash
@@ -36,9 +36,9 @@
 
 - name: 生成 etcd peer.key、peer.crt
   shell: |
-    openssl genrsa -out peer-{{ item }}.key 2048
-    openssl req -new  -key peer-{{ item }}.key -subj "/CN=etcd-peer" -reqexts v3_ext_peer -config <(cat etcd-csr.conf <(printf "\nIP.2 = {{ item }}")) -out peer-{{ item }}.csr
-    openssl x509 -in peer-{{ item }}.csr -req -CA ca.crt -CAkey ca.key -CAcreateserial -extensions v3_ext_peer -extfile <(cat etcd-csr.conf <(printf "\nIP.2 = {{ item }}")) -days 3650 -out peer-{{ item }}.crt
+    openssl genrsa -out peer-{{ hostvars[ item ].etcd_name }}.key 2048
+    openssl req -new  -key peer-{{ hostvars[ item ].etcd_name }}.key -subj "/CN=etcd-peer" -reqexts v3_ext_peer -config <(cat etcd-csr.conf <(printf "\nIP.2 = {{ item }}")) -out peer-{{ hostvars[ item ].etcd_name }}.csr
+    openssl x509 -in peer-{{ hostvars[ item ].etcd_name }}.csr -req -CA ca.crt -CAkey ca.key -CAcreateserial -extensions v3_ext_peer -extfile <(cat etcd-csr.conf <(printf "\nIP.2 = {{ item }}")) -days 3650 -out peer-{{ hostvars[ item ].etcd_name }}.crt
   args:
     chdir: "{{ playbook_dir }}/pki/etcd"
     executable: /bin/bash
