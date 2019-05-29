@@ -1,0 +1,53 @@
+---
+- name: 创建 etcd 数据目录、证书目录、配置目录
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+   - "{{ etcd_data_dir }}"
+   - /etc/kubernetes/pki/etcd
+   - /etc/etcd
+
+- name: 分发 etcd 证书 
+  copy:
+    src: "{{ playbook_dir }}/pki/etcd/{{ item }}"
+    dest: "/etc/kubernetes/pki/etcd/{{ item }}"
+    mode: 0644
+  with_items:
+   - ca.crt
+   - "server-{{ etcd_name }}.crt"
+   - "server-{{ etcd_name }}.key"
+   - "peer-{{ etcd_name }}.crt"
+   - "peer-{{ etcd_name }}.key"
+
+- name: 分发 etcd 二进制文件 
+  copy:
+    src: "{{ playbook_dir }}/files/etcd-{{ etcd_ver }}/{{ item }}"
+    dest: "{{ etcd_bin_dir }}/{{ item }}"
+    mode: 0755
+  with_items:
+   - etcd
+   - etcdctl
+
+- name: 分发 etcd.service 文件 
+  template:
+    src: etcd.service.j2
+    dest: /etc/systemd/system/etcd.service
+    mode: 644
+
+- name: 分发 etcd.conf 文件 
+  template:
+    src: etcd.conf.yml.j2
+    dest: /etc/etcd/etcd.conf.yml
+    mode: 644
+
+- name: 开机启动 etcd
+  systemd:
+    name: etcd
+    enabled: yes 
+    daemon_reload: yes
+
+- name: 启动 etcd
+  systemd:
+    name: etcd
+    state: restarted

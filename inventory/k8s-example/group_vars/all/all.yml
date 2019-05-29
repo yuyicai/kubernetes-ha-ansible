@@ -4,6 +4,7 @@ etcd_ver: v3.2.26
 # https://github.com/etcd-io/etcd/releases/download/{{ etcd_ver }}/etcd-{{ etcd_ver }}-linux-amd64.tar.gz 
 # https://storage.googleapis.com/etcd/{{ etcd_ver }}/etcd-{{ etcd_ver }}-linux-amd64.tar.gz 
 etcd_download_url: https://storage.googleapis.com.cnpmjs.org/etcd/{{ etcd_ver }}/etcd-{{ etcd_ver }}-linux-amd64.tar.gz 
+etcd_data_dir: /var/lib/etcd
 
 # k8s版本
 k8s_ver: v1.14.2
