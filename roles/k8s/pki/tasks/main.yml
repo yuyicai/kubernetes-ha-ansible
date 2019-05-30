@@ -32,7 +32,7 @@
     chdir: "{{ playbook_dir }}/pki"
     executable: /bin/bash
   with_items:
-      - "{{ groups['k8s-master'] }}"
+      - "{{ groups['kube-master'] }}"
 
 - name: 生成 apiserver-kubelet client.key、client.crt
   shell: |

@@ -4,30 +4,33 @@ etcd_ver: v3.2.26
 # https://github.com/etcd-io/etcd/releases/download/{{ etcd_ver }}/etcd-{{ etcd_ver }}-linux-amd64.tar.gz 
 # https://storage.googleapis.com/etcd/{{ etcd_ver }}/etcd-{{ etcd_ver }}-linux-amd64.tar.gz 
 etcd_download_url: https://storage.googleapis.com.cnpmjs.org/etcd/{{ etcd_ver }}/etcd-{{ etcd_ver }}-linux-amd64.tar.gz 
+# etcd数据目录
 etcd_data_dir: /var/lib/etcd
+# etcd安装目录
+etcd_bin_dir: /usr/local/bin
 
 # k8s版本
-k8s_ver: v1.14.2
+kube_ver: v1.14.2
 # k8s二进制组件下载地址：
-k8s_download_url: https://storage.googleapis.com.cnpmjs.org/kubernetes-release/release/{{ k8s_ver }}/kubernetes-server-linux-amd64.tar.gz
+kube_download_url: https://storage.googleapis.com.cnpmjs.org/kubernetes-release/release/{{ kube_ver }}/kubernetes-server-linux-amd64.tar.gz
+# pod IP段
 cluster_CIDR: 10.244.0.0/16
+# svc IP段
 service_CIDR: 10.96.0.0/12
 cluster_service_IP: 10.96.0.1
-
+# k8s安装目录
+kube_bin_dir: /usr/local/bin
 
 # docker版本
 docker_ver: 18.06.3-ce
 # docker二进制下载地址：
 # https://mirror.azure.cn/docker-ce/linux/static/stable/x86_64/docker-{{ docker_ver }}.tgz 
 docker_download_url: https://mirrors.aliyun.com/docker-ce/linux/static/stable/x86_64/docker-{{ docker_ver }}.tgz 
-
 # docker安装目录
 docker_bin_dir: /usr/local/bin
 
-# etcd安装目录
-etcd_bin_dir: /usr/local/bin
 
-# k8s安装目录
-k8s_bin_dir: /usr/local/bin
+
+
 
 

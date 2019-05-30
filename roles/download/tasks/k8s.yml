@@ -1,13 +1,13 @@
 ---
 - name: 下载 k8s 组件
   get_url:
-    url: "{{ k8s_download_url }}"
-    dest: "{{ playbook_dir }}/files/k8s-{{ k8s_ver }}-linux-amd64.tar.gz"
+    url: "{{ kube_download_url }}"
+    dest: "{{ playbook_dir }}/files/k8s-{{ kube_ver }}-linux-amd64.tar.gz"
 
 - name: 解压 k8s 组件
   unarchive:
-    src: "{{ playbook_dir }}/files/k8s-{{ k8s_ver }}-linux-amd64.tar.gz"
-    dest: "{{ playbook_dir }}/files/k8s-{{ k8s_ver }}"
+    src: "{{ playbook_dir }}/files/k8s-{{ kube_ver }}-linux-amd64.tar.gz"
+    dest: "{{ playbook_dir }}/files/k8s-{{ kube_ver }}"
     remote_src: yes
     extra_opts:
     - --strip-components=1
