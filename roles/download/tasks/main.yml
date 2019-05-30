@@ -5,7 +5,7 @@
     state: directory
   with_items:
    - "{{ playbook_dir }}/files/etcd-{{ etcd_ver }}"
-   - "{{ playbook_dir }}/files/k8s-{{ k8s_ver }}"
+   - "{{ playbook_dir }}/files/k8s-{{ kube_ver }}"
    - "{{ playbook_dir }}/files/docker-{{ docker_ver }}"
 
 - import_tasks: docker.yml
