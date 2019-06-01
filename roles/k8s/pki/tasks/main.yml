@@ -55,7 +55,7 @@
 - name: 生成 kube-controller-manager.key、kube-controller-manager.crt
   shell: |
     openssl genrsa -out kube-controller-manager.key 2048
-    openssl req -new  -key kube-controller-manager.key -subj "CN=system:kube-controller-manager" -reqexts v3_ext_client -config k8s-csr.conf -out kube-controller-manager.csr
+    openssl req -new  -key kube-controller-manager.key -subj "/CN=system:kube-controller-manager" -reqexts v3_ext_client -config k8s-csr.conf -out kube-controller-manager.csr
     openssl x509 -in kube-controller-manager.csr -req -CA ca.crt -CAkey ca.key -CAcreateserial -extensions v3_ext_client -extfile k8s-csr.conf -days 3650 -out kube-controller-manager.crt
   args:
     chdir: "{{ playbook_dir }}/pki"
@@ -63,7 +63,7 @@
 - name: 生成 kube-scheduler.key、kube-scheduler.crt
   shell: |
     openssl genrsa -out kube-scheduler.key 2048
-    openssl req -new  -key kube-scheduler.key -subj "CN=system:kube-scheduler" -reqexts v3_ext_client -config k8s-csr.conf -out kube-scheduler.csr
+    openssl req -new  -key kube-scheduler.key -subj "/CN=system:kube-scheduler" -reqexts v3_ext_client -config k8s-csr.conf -out kube-scheduler.csr
     openssl x509 -in kube-scheduler.csr -req -CA ca.crt -CAkey ca.key -CAcreateserial -extensions v3_ext_client -extfile k8s-csr.conf -days 3650 -out kube-scheduler.crt
   args:
     chdir: "{{ playbook_dir }}/pki"
@@ -102,3 +102,5 @@
     openssl rsa -in sa.key -pubout -out sa.pub
   args:
     chdir: "{{ playbook_dir }}/pki"
+
+- import_tasks: kubeconfig.yml
