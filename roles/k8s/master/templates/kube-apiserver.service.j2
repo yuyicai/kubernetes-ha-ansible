@@ -5,6 +5,7 @@ Documentation=https://kubernetes.io/docs/home/
 [Service]
 ExecStart={{ kube_bin_dir }}/kube-apiserver \
     --advertise-address={{ inventory_hostname }} \
+    --bind-address={{ inventory_hostname }} \
     --allow-privileged=true \
     --authorization-mode=Node,RBAC \
     --client-ca-file=/etc/kubernetes/pki/ca.crt \
@@ -28,8 +29,8 @@ ExecStart={{ kube_bin_dir }}/kube-apiserver \
     --secure-port=6443 \
     --service-account-key-file=/etc/kubernetes/pki/sa.pub \
     --service-cluster-ip-range={{ service_CIDR }} \
-    --tls-cert-file=/etc/kubernetes/pki/apiserver.crt \
-    --tls-private-key-file=/etc/kubernetes/pki/apiserver.key
+    --tls-cert-file=/etc/kubernetes/pki/apiserver-{{ master_name }}.crt \
+    --tls-private-key-file=/etc/kubernetes/pki/apiserver-{{ master_name }}.key
 Restart=on-failure
 RestartSec=5
 

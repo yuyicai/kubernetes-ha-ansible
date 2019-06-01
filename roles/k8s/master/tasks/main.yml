@@ -1,5 +1,5 @@
 ---
-- name: 创建 k8s 配置目录、证书目录
+- name: 创建 k8s 证书目录、配置目录
   file:
     path: "{{ item }}"
     state: directory
@@ -7,10 +7,20 @@
    - /etc/kubernetes/pki
    - /etc/kubernetes
 
+- name: 分发 kube-controller-manager、kube-scheduler kubeconfig 文件
+  copy:
+    src: "{{ playbook_dir }}/pki/{{ item }}"
+    dest: "/etc/kubernetes/{{ item }}"
+    mode: 0600
+  with_items:
+    - controller-manager.conf
+    - scheduler.conf
+
 - name: 分发 kube-apiserver、kube-controller-manager、kube-scheduler service 文件
   template:
     src: "{{ item }}.j2"
     dest: "/etc/systemd/system/{{ item }}"
+    mode: 0644
   with_items:
     - kube-apiserver.service
     - kube-controller-manager.service
@@ -30,7 +40,7 @@
   copy:
     src: "{{ playbook_dir }}/pki/{{ item }}"
     dest: "/etc/kubernetes/pki/{{ item }}"
-    mode: 0644
+    mode: 0600
   with_items:
    - ca.crt
    - ca.key
