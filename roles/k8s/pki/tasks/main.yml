@@ -1,4 +1,6 @@
 ---
+# https://kubernetes.io/docs/setup/certificates/
+
 - name: 创建k8s pki 本地文件目录
   file: 
     path: "{{ playbook_dir }}/pki"
@@ -39,6 +41,30 @@
     openssl genrsa -out apiserver-kubelet-client.key 2048
     openssl req -new  -key apiserver-kubelet-client.key -subj "/O=system:masters/CN=kube-apiserver-kubelet-client" -reqexts v3_ext_client -config k8s-csr.conf -out apiserver-kubelet-client.csr
     openssl x509 -in apiserver-kubelet-client.csr -req -CA ca.crt -CAkey ca.key -CAcreateserial -extensions v3_ext_client -extfile k8s-csr.conf -days 3650 -out apiserver-kubelet-client.crt
+  args:
+    chdir: "{{ playbook_dir }}/pki"
+
+- name: 生成 admin.key、admin.crt
+  shell: |
+    openssl genrsa -out admin.key 2048
+    openssl req -new  -key admin.key -subj "/O=system:masters/CN=kubernetes-admin" -reqexts v3_ext_client -config k8s-csr.conf -out admin.csr
+    openssl x509 -in admin.csr -req -CA ca.crt -CAkey ca.key -CAcreateserial -extensions v3_ext_client -extfile k8s-csr.conf -days 3650 -out admin.crt
+  args:
+    chdir: "{{ playbook_dir }}/pki"
+
+- name: 生成 kube-controller-manager.key、kube-controller-manager.crt
+  shell: |
+    openssl genrsa -out kube-controller-manager.key 2048
+    openssl req -new  -key kube-controller-manager.key -subj "CN=system:kube-controller-manager" -reqexts v3_ext_client -config k8s-csr.conf -out kube-controller-manager.csr
+    openssl x509 -in kube-controller-manager.csr -req -CA ca.crt -CAkey ca.key -CAcreateserial -extensions v3_ext_client -extfile k8s-csr.conf -days 3650 -out kube-controller-manager.crt
+  args:
+    chdir: "{{ playbook_dir }}/pki"
+
+- name: 生成 kube-scheduler.key、kube-scheduler.crt
+  shell: |
+    openssl genrsa -out kube-scheduler.key 2048
+    openssl req -new  -key kube-scheduler.key -subj "CN=system:kube-scheduler" -reqexts v3_ext_client -config k8s-csr.conf -out kube-scheduler.csr
+    openssl x509 -in kube-scheduler.csr -req -CA ca.crt -CAkey ca.key -CAcreateserial -extensions v3_ext_client -extfile k8s-csr.conf -days 3650 -out kube-scheduler.crt
   args:
     chdir: "{{ playbook_dir }}/pki"
 
