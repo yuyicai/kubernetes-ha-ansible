@@ -5,7 +5,7 @@ Documentation=https://kubernetes.io/docs/home/
 [Service]
 ExecStart={{ kube_bin_dir }}/kube-apiserver \
     --advertise-address={{ inventory_hostname }} \
-    --bind-address={{ inventory_hostname }} \
+    --bind-address=0.0.0.0 \
     --allow-privileged=true \
     --authorization-mode=Node,RBAC \
     --client-ca-file=/etc/kubernetes/pki/ca.crt \
