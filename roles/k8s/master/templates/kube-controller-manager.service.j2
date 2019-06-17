@@ -3,7 +3,7 @@ Description=Kubernetes Controller Manager
 Documentation=https://kubernetes.io/docs/home/
 
 [Service]
-ExecStart={{ kube_bin_dir }}/controller-manager \
+ExecStart={{ kube_bin_dir }}/kube-controller-manager \
     --authentication-kubeconfig=/etc/kubernetes/controller-manager.conf \
     --authorization-kubeconfig=/etc/kubernetes/controller-manager.conf \
     --bind-address=127.0.0.1 \

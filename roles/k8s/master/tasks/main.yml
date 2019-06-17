@@ -6,6 +6,7 @@
   with_items:
    - /etc/kubernetes/pki
    - /etc/kubernetes
+   - ~/.kube
 
 - name: 分发 kube-controller-manager、kube-scheduler kubeconfig 文件
   copy:
@@ -15,6 +16,12 @@
   with_items:
     - controller-manager.conf
     - scheduler.conf
+
+- name: 分发 admin kubeconfig 文件
+  copy:
+    src: "{{ playbook_dir }}/pki/admin.conf"
+    dest: ~/.kube/config
+    mode: 0600
 
 - name: 分发 kube-apiserver、kube-controller-manager、kube-scheduler service 文件
   template:
@@ -26,7 +33,7 @@
     - kube-controller-manager.service
     - kube-scheduler.service
 
-- name: 分发 kube-apiserver、kube-controller-manager、kube-scheduler 二进制文件
+- name: 分发 kube-apiserver、kube-controller-manager、kube-scheduler、kubectl 二进制文件
   copy:
     src: "{{ playbook_dir }}/files/k8s-{{ kube_ver }}/{{ item }}"
     dest: "{{ kube_bin_dir }}/{{ item }}"
@@ -35,6 +42,7 @@
     - kube-apiserver
     - kube-controller-manager
     - kube-scheduler
+    - kubectl
 
 - name: 分发 k8s apiserver 证书 
   copy:
@@ -45,7 +53,7 @@
    - ca.crt
    - ca.key
    - "apiserver-{{ master_name }}.crt"
-   - "apiserver-{{ master_name }}.crt.key"
+   - "apiserver-{{ master_name }}.key"
    - apiserver-etcd-client.crt
    - apiserver-etcd-client.key
    - apiserver-kubelet-client.crt
@@ -56,3 +64,22 @@
    - front-proxy-client.key
    - sa.pub
    - sa.key
+
+- name: 设置开机启动 kube-apiserver、kube-controller-manager、kube-scheduler
+  systemd:
+    name: "{{ item }}"
+    enabled: yes 
+    daemon_reload: yes
+  with_items:
+    - kube-apiserver
+    - kube-controller-manager
+    - kube-scheduler
+
+- name: 启动 kube-apiserver、kube-controller-manager、kube-scheduler
+  systemd:
+    name: "{{ item }}"
+    state: restarted
+  with_items:
+    - kube-apiserver
+    - kube-controller-manager
+    - kube-scheduler
