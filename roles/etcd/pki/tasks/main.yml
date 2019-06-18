@@ -32,7 +32,7 @@
     chdir: "{{ playbook_dir }}/pki/etcd"
     executable: /bin/bash
   with_items:
-      - "{{ groups.etcd }}"
+      - "{{ groups['etcd'] }}"
 
 - name: 生成 etcd peer.key、peer.crt
   shell: |
@@ -43,4 +43,4 @@
     chdir: "{{ playbook_dir }}/pki/etcd"
     executable: /bin/bash
   with_items:
-      - "{{ groups.etcd }}"
+      - "{{ groups['etcd'] }}"

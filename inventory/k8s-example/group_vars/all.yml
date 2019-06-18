@@ -27,6 +27,7 @@ cluster_service_IP: 10.96.0.1
 cluster_dns_IP: 10.96.0.10
 # k8s安装目录
 kube_bin_dir: /usr/local/bin
+nginx_image: nginx:1.15
 
 # docker版本
 docker_ver: 18.06.3-ce

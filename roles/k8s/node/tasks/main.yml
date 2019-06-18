@@ -1,0 +1,10 @@
+---
+- name: 创建 静态 pod 配置目录
+  file:
+    path: /etc/kubernetes/manifests
+    state: directory
+    mode: 0755
+
+- import_tasks: tls-bootstrap.yml
+
+- import_tasks: nginx.yml
