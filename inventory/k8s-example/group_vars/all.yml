@@ -13,6 +13,11 @@ etcd_bin_dir: /usr/local/bin
 kube_ver: v1.14.2
 # k8s二进制组件下载地址：
 kube_download_url: https://storage.googleapis.com.cnpmjs.org/kubernetes-release/release/{{ kube_ver }}/kubernetes-server-linux-amd64.tar.gz
+# cni 版本
+cni_ver: v0.8.1
+# cni 下载地址
+# https://github.com/containernetworking/plugins/releases/download/{{ cni_ver }}/cni-plugins-linux-amd64-{{ cni_ver }}.tgz
+cni_download_url: https://mirror.azure.cn/kubernetes/containernetworking-plugins/cni-plugins-linux-amd64-{{ cni_ver }}.tgz
 # pod IP段
 cluster_CIDR: 10.244.0.0/16
 # svc IP段

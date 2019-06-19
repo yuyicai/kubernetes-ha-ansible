@@ -7,6 +7,7 @@
    - "{{ playbook_dir }}/files/etcd-{{ etcd_ver }}"
    - "{{ playbook_dir }}/files/k8s-{{ kube_ver }}"
    - "{{ playbook_dir }}/files/docker-{{ docker_ver }}"
+   - "{{ playbook_dir }}/files/cni-plugins-{{ cni_ver }}"
 
 - import_tasks: docker.yml
 
@@ -14,3 +15,4 @@
 
 - import_tasks: k8s.yml
 
+- import_tasks: cni.yml
