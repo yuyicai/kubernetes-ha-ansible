@@ -1,0 +1,74 @@
+---
+- name: 创建 CNI 插件目录、kubelet配置目录
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+   - /opt/cni/bin
+   - /etc/kubernetes
+   - /etc/kubernetes/pki
+   - /var/lib/kubelet
+
+- name: 分发 CNI 插件
+  copy:
+    src: "{{ playbook_dir }}/files/cni-plugins-{{ cni_ver }}/{{ item }}"
+    dest: "/opt/cni/bin/{{ item }}"
+    mode: 0755
+  with_items:
+    - bandwidth
+    - bridge
+    - dhcp
+    - firewall
+    - flannel
+    - host-device
+    - host-local
+    - ipvlan
+    - loopback
+    - macvlan
+    - portmap
+    - ptp
+    - sbr
+    - static
+    - tuning
+    - vlan
+
+- name: 分发 kubelet service 文件
+  template:
+    src: "kubelet.servicej2"
+    dest: "/etc/systemd/system/kubelet.service"
+    mode: 0644
+
+- name: 分发 bootstrap-kubelet.conf 文件
+  template:
+    src: "bootstrap-kubelet.conf.j2"
+    dest: "/etc/kubernetes/bootstrap-kubelet.conf"
+    mode: 0644
+
+- name: 分发 ca.crt
+  template:
+    src: "{{ playbook_dir }}/pki/ca.crt"
+    dest: "/etc/kubernetes/pki/ca.crt"
+    mode: 0644
+
+- name: 分发 kubelet confing 文件
+  template:
+    src: kubelet-config.yaml.j2
+    dest: "/var/lib/kubelet/kubelet-config.yaml"
+    mode: 0644
+
+- name: 分发 kubelet二进制 文件
+  copy:
+    src: "{{ playbook_dir }}/files/k8s-{{ kube_ver }}/kubelet"
+    dest: "{{ kube_bin_dir }}/kubelet"
+    mode: 755
+
+- name: 设置开机启动 kubelet
+  systemd:
+    name: kubelet
+    enabled: yes 
+    daemon_reload: yes
+
+- name: kubelet
+  systemd:
+    name: kubelet
+    state: restarted
