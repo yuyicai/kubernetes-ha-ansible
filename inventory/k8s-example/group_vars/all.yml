@@ -31,6 +31,18 @@ kube_bin_dir: /usr/local/bin
 nginx_image: nginx:1.15
 # kube-proxy 模式 iptables 或者 ipvs
 kube_proxy_mode: ipvs
+# flannel backend 类型：vxlan，host-gw，ali-vpc
+flannel_backend_type: vxlan
+# flannel 镜像
+flannel_image: quay.io/coreos/flannel:v0.11.0-amd64
+# coredns 镜像
+coredns_image: gcr.azk8s.cn/google_containers/coredns:1.3.1
+
+# DNS 上游服务配置
+# 如果宿主机的/etc/resolv.conf文件的如下所示：
+# nameserver 127.0.0.53 
+# 那么需要使用：/run/systemd/resolve/resolv.conf，获取真正的上游服务配置，不然coredns无法启动
+resolv_conf: /etc/resolv.conf
 
 # docker版本
 docker_ver: 18.06.3-ce
