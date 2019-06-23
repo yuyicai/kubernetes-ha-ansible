@@ -34,7 +34,7 @@
 
 - name: 分发 kubelet service 文件
   template:
-    src: "kubelet.servicej2"
+    src: "kubelet.service.j2"
     dest: "/etc/systemd/system/kubelet.service"
     mode: 0644
 
@@ -53,7 +53,7 @@
 - name: 分发 kubelet confing 文件
   template:
     src: kubelet-config.yaml.j2
-    dest: "/var/lib/kubelet/kubelet-config.yaml"
+    dest: "/var/lib/kubelet/config.yaml"
     mode: 0644
 
 - name: 分发 kubelet二进制 文件
@@ -68,7 +68,7 @@
     enabled: yes 
     daemon_reload: yes
 
-- name: kubelet
+- name: 启动 kubelet
   systemd:
     name: kubelet
     state: restarted

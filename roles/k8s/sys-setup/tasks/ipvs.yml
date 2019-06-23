@@ -1,0 +1,44 @@
+---
+# https://github.com/kubernetes/kubernetes/blob/master/pkg/proxy/ipvs/README.md#run-kube-proxy-in-ipvs-mode
+- name: 安装 IPVS 依赖
+  package:
+    name: ipset
+    state: present
+
+- name: 加载 IPVS 所需内核模块
+  modprobe:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - ip_vs
+    - ip_vs_rr
+    - ip_vs_wrr
+    - ip_vs_sh
+
+- name: 加载 IPVS 所需内核模块 (nf_conntrack_ipv4 kernels < 4.19)
+  modprobe:
+    name: nf_conntrack_ipv4
+    state: present
+  register: enable_nf_conntrack_ipv4
+  ignore_errors: yes
+
+- name: nf_conntrack_ipv4 不存在时使用 nf_conntrack (kernels >= 4.19)
+  modprobe:
+    name: nf_conntrack
+    state: present
+  when:
+    - enable_nf_conntrack_ipv4 is failed
+
+- name: 开机加载 ipvs 相关内核模块
+  copy:
+    dest: /etc/modules-load.d/k8s-ipvs.conf
+    content: |
+      ip_vs
+      ip_vs_rr
+      ip_vs_wrr
+      ip_vs_sh
+      {% if enable_nf_conntrack_ipv4 is failed -%}
+      nf_conntrack
+      {%-   else -%}
+      nf_conntrack_ipv4
+      {%-   endif -%}

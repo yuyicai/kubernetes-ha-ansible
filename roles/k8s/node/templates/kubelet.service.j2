@@ -3,10 +3,11 @@ Description=kubelet: The Kubernetes Node Agent
 Documentation=https://kubernetes.io/docs/home/
 
 [Service]
-ExecStart=/usr/bin/kubelet \
+ExecStart={{ kube_bin_dir }}/kubelet \
     --network-plugin=cni \
     --config=/var/lib/kubelet/config.yaml \
-    --pod-infra-container-image=gcr.azk8s.cn/google_containers/pause:3.1
+    --hostname-override={{ inventory_hostname }} \
+    --pod-infra-container-image=gcr.azk8s.cn/google_containers/pause:3.1 \
     --bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf \
     --kubeconfig=/etc/kubernetes/kubelet.conf
 Restart=always

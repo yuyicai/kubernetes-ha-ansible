@@ -52,6 +52,14 @@
   args:
     chdir: "{{ playbook_dir }}/pki"
 
+- name: 生成 kube-proxy.key、kube-proxy.crt
+  shell: |
+    openssl genrsa -out kube-proxy.key 2048
+    openssl req -new  -key kube-proxy.key -subj "/CN=system:kube-proxy" -reqexts v3_ext_client -config k8s-csr.conf -out kube-proxy.csr
+    openssl x509 -in kube-proxy.csr -req -CA ca.crt -CAkey ca.key -CAcreateserial -extensions v3_ext_client -extfile k8s-csr.conf -days 3650 -out kube-proxy.crt
+  args:
+    chdir: "{{ playbook_dir }}/pki"
+
 - name: 生成 kube-controller-manager.key、kube-controller-manager.crt
   shell: |
     openssl genrsa -out kube-controller-manager.key 2048

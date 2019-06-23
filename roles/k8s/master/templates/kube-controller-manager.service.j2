@@ -4,12 +4,14 @@ Documentation=https://kubernetes.io/docs/home/
 
 [Service]
 ExecStart={{ kube_bin_dir }}/kube-controller-manager \
+    --allocate-node-cidrs=true
     --authentication-kubeconfig=/etc/kubernetes/controller-manager.conf \
     --authorization-kubeconfig=/etc/kubernetes/controller-manager.conf \
     --bind-address=127.0.0.1 \
     --client-ca-file=/etc/kubernetes/pki/ca.crt \
     --cluster-signing-cert-file=/etc/kubernetes/pki/ca.crt \
     --cluster-signing-key-file=/etc/kubernetes/pki/ca.key \
+    --cluster-cidr={{ cluster_CIDR }} \
     --controllers=*,bootstrapsigner,tokencleaner \
     --kubeconfig=/etc/kubernetes/controller-manager.conf \
     --leader-elect=true \

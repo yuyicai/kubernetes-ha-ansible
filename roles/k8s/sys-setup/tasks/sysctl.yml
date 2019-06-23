@@ -1,0 +1,13 @@
+---
+- name: 设置内核参数
+  sysctl:
+    name: "{{ item }}"
+    state: present
+    sysctl_file: /etc/sysctl.d/99-k8s-sysctl.conf
+    value: "1"
+    reload: yes
+  with_items:
+    - net.ipv4.ip_forward
+    - net.bridge.bridge-nf-call-iptables
+    - net.bridge.bridge-nf-call-arptables
+    - net.bridge.bridge-nf-call-ip6tables

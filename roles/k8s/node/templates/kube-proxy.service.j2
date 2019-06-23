@@ -1,0 +1,13 @@
+[Unit]
+Description=kubelet: The Kubernetes Kube Proxy
+Documentation=https://kubernetes.io/docs/home/
+
+[Service]
+ExecStart={{ kube_bin_dir }}/kube-proxy \
+    --config=/var/lib/kube-proxy/config.yaml
+Restart=always
+StartLimitInterval=0
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

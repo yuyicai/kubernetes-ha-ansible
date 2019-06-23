@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Config
+preferences: {}
+clusters:
+- cluster:
+    certificate-authority-data: {{ ca_cert_base64.content }}
+    server: https://127.0.0.1:6443
+  name: kubernetes
+users:
+- name: kube-proxy
+  user:
+    client-certificate-data: {{ kube_proxy_cert_base64.content }}
+    client-key-data: {{ kube_proxy_key_base64.content }}
+contexts:
+- context:
+    cluster: kubernetes
+    user: kube-proxy
+  name: kube-proxy@kubernetes
+current-context: kube-proxy@kubernetes

@@ -1,2 +1,19 @@
 ---
+- name: 加载 br_netfilter 内核模块
+  modprobe:
+    name: br_netfilter
+    state: present
+
+- name: 开机加载 br_netfilter 内核模块
+  copy:
+    dest: /etc/modules-load.d/k8s-br_netfilter.conf
+    content: br_netfilter
+
 - import_tasks: swapoff.yml
+
+- import_tasks: modules.yml
+
+- import_tasks: sysctl.yml
+
+- import_tasks: ipvs.yml
+  when: kube_proxy_mode == 'ipvs'

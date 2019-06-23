@@ -27,7 +27,10 @@ cluster_service_IP: 10.96.0.1
 cluster_dns_IP: 10.96.0.10
 # k8s安装目录
 kube_bin_dir: /usr/local/bin
+# nginx-proxy 镜像
 nginx_image: nginx:1.15
+# kube-proxy 模式 iptables 或者 ipvs
+kube_proxy_mode: ipvs
 
 # docker版本
 docker_ver: 18.06.3-ce
