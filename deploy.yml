@@ -1,0 +1,36 @@
+- hosts: kube-cluster
+  roles:
+  - cri/docker
+
+- hosts: localhost
+  roles:
+  - etcd/pki
+
+- hosts: etcd
+  roles:
+  - etcd/etcd
+
+- hosts: localhost
+  roles:
+  - k8s/pki
+
+- hosts: kube-master
+  roles:
+  - k8s/master
+
+- hosts: kube-cluster
+  roles:
+  - k8s/sys-setup
+
+- hosts: kube-cluster
+  roles:
+  - k8s/sys-setup
+  - k8s/node
+
+- hosts: kube-master
+  roles:
+  - addons/network/flannel
+
+- hosts: kube-master
+  roles:
+  - addons/coredns

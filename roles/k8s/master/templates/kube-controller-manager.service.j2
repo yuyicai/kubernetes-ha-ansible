@@ -4,7 +4,7 @@ Documentation=https://kubernetes.io/docs/home/
 
 [Service]
 ExecStart={{ kube_bin_dir }}/kube-controller-manager \
-    --allocate-node-cidrs=true
+    --allocate-node-cidrs=true \
     --authentication-kubeconfig=/etc/kubernetes/controller-manager.conf \
     --authorization-kubeconfig=/etc/kubernetes/controller-manager.conf \
     --bind-address=127.0.0.1 \

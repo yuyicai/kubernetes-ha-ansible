@@ -1,0 +1,150 @@
+---
+- name: 停止服务
+  systemd:
+    name: "{{ item }}"
+    state: stopped
+  with_items:
+    - kubelet
+    - kube-proxy
+    - kube-apiserver
+    - kube-controller-manager
+    - kube-scheduler
+    - etcd
+  failed_when: false
+
+- name: 清理services 文件
+  file:
+    path: "/etc/systemd/system/{{ item }}.service"
+    state: absent
+  with_items:
+    - kubelet
+    - kube-proxy
+    - kube-apiserver
+    - kube-controller-manager
+    - kube-scheduler
+    - etcd
+    - docker
+
+- name: 清理所有容器
+  shell: "{{ docker_bin_dir }}/docker ps -aq | xargs -r docker rm -fv"
+  register: remove_all_containers
+  retries: 4
+  until: remove_all_containers.rc == 0
+  delay: 5
+
+- name: umount kubelet挂载
+  shell: mount | grep /var/lib/kubelet/ | awk '{print $3}' | xargs -r umount -f
+  args:
+    warn: false
+  check_mode: no
+  register: umount_kubelet_dirs
+  retries: 4
+  until: umount_kubelet_dirs.rc == 0
+  delay: 5
+
+- name: 清理 iptables
+  iptables:
+    table: "{{ item }}"
+    flush: yes
+  with_items:
+    - filter
+    - nat
+
+- name: 清理 IPVC
+  shell: "ipvsadm -C"
+  when:
+    - kube_proxy_mode == 'ipvs' and inventory_hostname in groups['kube-cluster']
+
+- name: 检查 kube_ipvs0 网桥
+  stat:
+    path: /sys/class/net/kube-ipvs0
+  register: kube_ipvs0
+
+- name: 移除 kube_ipvs0 网桥
+  shell: "ip link del kube-ipvs0"
+  when:
+    - kube_proxy_mode == 'ipvs'
+    - kube_ipvs0.stat.exists
+
+- name: 检查 cni0 网桥
+  stat:
+    path: /sys/class/net/cni0
+  register: cni0
+
+- name: 移除 cni0 网桥
+  shell: ip link del cni0
+  when: cni0.stat.exists
+
+- name: 检查 flannel.1 网桥
+  stat:
+    path: /sys/class/net/flannel.1
+  register: flannel
+
+- name: 移除 flannel.1 网桥
+  shell: ip link del flannel.1
+  when: flannel.stat.exists
+
+- name: 停止 docker
+  systemd:
+    name: "{{ item }}"
+    state: stopped
+  with_items:
+    - docker
+
+- name: systemctl daemon-reload
+  systemd:
+    daemon_reload: true
+
+- name: 清理文件
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /etc/kubernetes
+    - /var/lib/kubelet
+    - "{{ ansible_env.HOME | default('/root') }}/.kube"
+    - "{{ etcd_data_dir }}"
+    - /etc/cni
+    - /run/flannel
+    - /etc/flannel
+    - /run/kubernetes
+    - /var/log/pods/
+    - /var/lib/cni
+  ignore_errors: yes
+
+- name: 清理二进制文件
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+     - /opt/cni
+     - "{{ kube_bin_dir }}/kubelet"
+     - "{{ kube_bin_dir }}/kube-proxy"
+     - "{{ kube_bin_dir }}/kube-apiserver"
+     - "{{ kube_bin_dir }}/kube-controller-manager"
+     - "{{ kube_bin_dir }}/kube-scheduler"
+     - "{{ kube_bin_dir }}/kubectl"
+     - "{{ etcd_bin_dir }}/etcd"
+     - "{{ etcd_bin_dir }}/etcdctl"
+     - "{{ docker_bin_dir }}/docker"
+     - "{{ docker_bin_dir }}/docker-containerd"
+     - "{{ docker_bin_dir }}/docker-containerd-ctr"
+     - "{{ docker_bin_dir }}/docker-containerd-shim"
+     - "{{ docker_bin_dir }}/dockerd"
+     - "{{ docker_bin_dir }}/docker-init"
+     - "{{ docker_bin_dir }}/docker-proxy"
+     - "{{ docker_bin_dir }}/docker-runc"
+  ignore_errors: yes
+  when: delete_bin | bool
+
+- name: 重启网络
+  systemd:
+    name: >-
+      {% if ansible_os_family == "RedHat" -%}
+      network
+      {%- elif ansible_distribution == "Ubuntu" and ansible_distribution_release == "bionic" -%}
+      systemd-networkd
+      {%- elif ansible_os_family == "Debian" -%}
+      networking
+      {%- endif %}
+    state: restarted
