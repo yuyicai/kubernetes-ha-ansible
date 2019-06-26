@@ -1,0 +1,39 @@
+# k8s集群相关变量
+
+# k8s版本
+kube_ver: v1.15.0
+# cni 版本
+cni_ver: v0.8.1
+
+# pod IP段
+cluster_CIDR: 10.244.0.0/16
+# svc IP段
+service_CIDR: 10.96.0.0/12
+# 集群网络apiserver地址，通常取svc开通第一个
+cluster_service_IP: 10.96.0.1
+# 集群DNS地址
+cluster_dns_IP: 10.96.0.10
+
+# k8s安装目录
+kube_bin_dir: /usr/local/bin
+# cni安装目录
+cni_bin_dir: /opt/cni/bin
+# 静态pod配置目录
+pod_manifests_dir: /etc/kubernetes/manifests
+# k8s配置目录
+kube_dir: /etc/kubernetes
+# nginx-proxy配置目录
+nginx_proxy_dir: /etc/kubernetes/nginx
+
+# kube-proxy 模式 iptables 或者 ipvs
+kube_proxy_mode: ipvs
+
+# nginx-proxy 检查检查端口
+nginx_proxy_healthcheck_port: 8089
+# nginx-proxy 服务端口
+nginx_proxy_port: 8443
+
+# DNS 上游服务配置
+# 如果宿主机的/etc/resolv.conf配置是：nameserver 127.0.0.53 具体见：https://github.com/coredns/coredns/tree/master/plugin/loop
+# 那么需要使用：/run/systemd/resolve/resolv.conf，获取真正的上游服务配置，不然coredns无法启动
+resolv_conf: /etc/resolv.conf

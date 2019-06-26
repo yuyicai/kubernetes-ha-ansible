@@ -3,11 +3,11 @@
     - name: 拷贝tls-bootstrap-binding.yml到第一台master
       copy:
         src: tls-bootstrap-binding.yml
-        dest: /etc/kubernetes/tls-bootstrap-binding.yml
+        dest: "{{ kube_dir }}/tls-bootstrap-binding.yml"
 
     - name: 允许system:bootstrappers用户组创建并且自动批准CSR、允许system:nodes用户组自动更新CSR
       shell: |
-        {{ kube_bin_dir }}/kubectl apply -f /etc/kubernetes/tls-bootstrap-binding.yml
+        {{ kube_bin_dir }}/kubectl apply -f {{ kube_dir }}/tls-bootstrap-binding.yml
 
     - name: 生成token-id
       shell: |
@@ -40,17 +40,17 @@
 - block:
     - name: 获取ca.crt base64编码
       slurp:
-        src: "{{ playbook_dir }}/pki/ca.crt"
+        src: "{{ localhost_dir }}/pki/ca.crt"
       register: ca_cert_base64
 
     - name: 获取ca.crt base64编码2
       slurp:
-        src: "{{ playbook_dir }}/pki/ca.crt"
+        src: "{{ localhost_dir }}/pki/ca.crt"
       register: ca_cert_base64
 
     - name: 生产bootstrap-kubelet.conf
       template:
         src: bootstrap-kubelet.conf.j2
-        dest: "{{ playbook_dir }}/pki/bootstrap-kubelet.conf"
+        dest: "{{ localhost_dir }}/pki/bootstrap-kubelet.conf"
   delegate_to: localhost
   run_once: true

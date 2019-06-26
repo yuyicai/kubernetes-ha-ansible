@@ -1,0 +1,6 @@
+# 本地文件夹，即ansible运行的主机上的文件夹
+# 用来存放生下载的二进制文件、生产的证书和配置文件
+# {{ localhost_dir }}/pki 存放所有证书相关
+# {{ localhost_dir }}/conf 存放配置相关
+# {{ localhost_dir }}/files 下载文件相关
+localhost_dir: "{{ playbook_dir }}/kube-cluster"

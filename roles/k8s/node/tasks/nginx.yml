@@ -2,7 +2,7 @@
 - block:
     - name: 创建 nginx proxy 文件目录
       file:
-        path: /etc/kubernetes/nginx
+        path: "{{ nginx_proxy_dir }}"
         state: directory
         owner: root
         mode: 0700
@@ -10,13 +10,12 @@
     - name: 分发 nginx proxy 配置
       template:
         src: nginx.conf.j2
-        dest: /etc/kubernetes/nginx/nginx.conf
+        dest: "{{ nginx_proxy_dir }}/nginx.conf"
         owner: root
         mode: 0600
 
     - name: 分发 nginx proxy 静态pod启动文件
       template:
         src: nginx-proxy.yml.j2
-        dest: /etc/kubernetes/manifests/nginx-proxy.yml
-
+        dest: "{{ pod_manifests_dir }}/nginx-proxy.yml"
   when: inventory_hostname in groups['kube-node']

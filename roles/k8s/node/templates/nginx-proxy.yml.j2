@@ -23,11 +23,11 @@ spec:
     livenessProbe:
       httpGet:
         path: /healthz
-        port: 8089
+        port: {{ nginx_proxy_healthcheck_port }}
     readinessProbe:
       httpGet:
         path: /healthz
-        port: 8089
+        port: {{ nginx_proxy_healthcheck_port }}
     volumeMounts:
     - mountPath: /etc/nginx/nginx.conf
       name: nginx-conf
@@ -35,5 +35,5 @@ spec:
   volumes:
   - name: nginx-conf
     hostPath:
-      path: /etc/kubernetes/nginx/nginx.conf
+      path: {{ nginx_proxy_dir }}/nginx.conf
       type: FileOrCreate

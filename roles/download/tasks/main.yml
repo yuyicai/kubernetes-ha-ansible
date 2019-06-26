@@ -4,10 +4,10 @@
     path: "{{ item }}"
     state: directory
   with_items:
-   - "{{ playbook_dir }}/files/etcd-{{ etcd_ver }}"
-   - "{{ playbook_dir }}/files/k8s-{{ kube_ver }}"
-   - "{{ playbook_dir }}/files/docker-{{ docker_ver }}"
-   - "{{ playbook_dir }}/files/cni-plugins-{{ cni_ver }}"
+   - "{{ localhost_dir }}/files/etcd-{{ etcd_ver }}"
+   - "{{ localhost_dir }}/files/k8s-{{ kube_ver }}"
+   - "{{ localhost_dir }}/files/docker-{{ docker_ver }}"
+   - "{{ localhost_dir }}/files/cni-plugins-{{ cni_ver }}"
 
 - import_tasks: docker.yml
 

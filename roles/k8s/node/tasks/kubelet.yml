@@ -4,15 +4,15 @@
     path: "{{ item }}"
     state: directory
   with_items:
-   - /opt/cni/bin
-   - /etc/kubernetes
-   - /etc/kubernetes/pki
+   - "{{ cni_bin_dir }}"
+   - "{{ kube_dir }}"
+   - "{{ kube_dir }}/pki"
    - /var/lib/kubelet
 
 - name: 分发 CNI 插件
   copy:
-    src: "{{ playbook_dir }}/files/cni-plugins-{{ cni_ver }}/{{ item }}"
-    dest: "/opt/cni/bin/{{ item }}"
+    src: "{{ localhost_dir }}/files/cni-plugins-{{ cni_ver }}/{{ item }}"
+    dest: "{{ cni_bin_dir }}/{{ item }}"
     mode: 0755
   with_items:
     - bandwidth
@@ -41,13 +41,13 @@
 - name: 分发 bootstrap-kubelet.conf 文件
   template:
     src: "bootstrap-kubelet.conf.j2"
-    dest: "/etc/kubernetes/bootstrap-kubelet.conf"
+    dest: "{{ kube_dir }}/bootstrap-kubelet.conf"
     mode: 0644
 
 - name: 分发 ca.crt
   template:
-    src: "{{ playbook_dir }}/pki/ca.crt"
-    dest: "/etc/kubernetes/pki/ca.crt"
+    src: "{{ localhost_dir }}/pki/ca.crt"
+    dest: "{{ kube_dir }}/pki/ca.crt"
     mode: 0644
 
 - name: 分发 kubelet confing 文件
@@ -58,7 +58,7 @@
 
 - name: 分发 kubelet二进制 文件
   copy:
-    src: "{{ playbook_dir }}/files/k8s-{{ kube_ver }}/kubelet"
+    src: "{{ localhost_dir }}/files/k8s-{{ kube_ver }}/kubelet"
     dest: "{{ kube_bin_dir }}/kubelet"
     mode: 755
 

@@ -4,14 +4,14 @@
     path: "{{ item }}"
     state: directory
   with_items:
-   - /etc/kubernetes/pki
-   - /etc/kubernetes
+   - "{{ kube_dir }}/pki"
+   - "{{ kube_dir }}"
    - ~/.kube
 
 - name: 分发 kube-controller-manager、kube-scheduler kubeconfig 文件
   copy:
-    src: "{{ playbook_dir }}/pki/{{ item }}"
-    dest: "/etc/kubernetes/{{ item }}"
+    src: "{{ localhost_dir }}/pki/{{ item }}"
+    dest: "{{ kube_dir }}/{{ item }}"
     mode: 0600
   with_items:
     - controller-manager.conf
@@ -19,7 +19,7 @@
 
 - name: 分发 admin kubeconfig 文件
   copy:
-    src: "{{ playbook_dir }}/pki/admin.conf"
+    src: "{{ localhost_dir }}/pki/admin.conf"
     dest: ~/.kube/config
     mode: 0600
 
@@ -35,7 +35,7 @@
 
 - name: 分发 kube-apiserver、kube-controller-manager、kube-scheduler、kubectl 二进制文件
   copy:
-    src: "{{ playbook_dir }}/files/k8s-{{ kube_ver }}/{{ item }}"
+    src: "{{ localhost_dir }}/files/k8s-{{ kube_ver }}/{{ item }}"
     dest: "{{ kube_bin_dir }}/{{ item }}"
     mode: 0755
   with_items:
@@ -46,8 +46,8 @@
 
 - name: 分发 k8s apiserver 证书 
   copy:
-    src: "{{ playbook_dir }}/pki/{{ item }}"
-    dest: "/etc/kubernetes/pki/{{ item }}"
+    src: "{{ localhost_dir }}/pki/{{ item }}"
+    dest: "{{ kube_dir }}/pki/{{ item }}"
     mode: 0600
   with_items:
    - ca.crt

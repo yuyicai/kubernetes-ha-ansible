@@ -2,12 +2,12 @@
 - name: 拷贝coredns.yml到第一台master
   template:
     src: coredns.yml.j2
-    dest: /etc/kubernetes/coredns.yml
+    dest: "{{ kube_dir }}/coredns.yml"
   delegate_to: "{{ groups['kube-master']|first }}"
   run_once: true
 
 - name: 部署 coredns
   shell: |
-    {{ kube_bin_dir }}/kubectl apply -f /etc/kubernetes/coredns.yml
+    {{ kube_bin_dir }}/kubectl apply -f {{ kube_dir }}/coredns.yml
   delegate_to: "{{ groups['kube-master']|first }}"
   run_once: true

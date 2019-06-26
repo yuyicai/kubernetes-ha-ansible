@@ -2,12 +2,12 @@
 - name: 拷贝flannel.yml到第一台master
   template:
     src: flannel.yml.j2
-    dest: /etc/kubernetes/flannel.yml
+    dest: "{{ kube_dir }}/flannel.yml"
   delegate_to: "{{ groups['kube-master']|first }}"
   run_once: true
 
 - name: 部署 flannel
   shell: |
-    {{ kube_bin_dir }}/kubectl apply -f /etc/kubernetes/flannel.yml
+    {{ kube_bin_dir }}/kubectl apply -f {{ kube_dir }}/flannel.yml
   delegate_to: "{{ groups['kube-master']|first }}"
   run_once: true

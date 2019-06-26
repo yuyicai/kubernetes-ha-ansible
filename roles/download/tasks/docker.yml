@@ -2,12 +2,12 @@
 - name: 下载 docker 组件
   get_url:
     url: "{{ docker_download_url }}"
-    dest: "{{ playbook_dir }}/files/docker-{{ docker_ver }}.tgz"
+    dest: "{{ localhost_dir }}/files/docker-{{ docker_ver }}.tgz"
 
 - name: 解压 docker 组件
   unarchive:
-    src: "{{ playbook_dir }}/files/docker-{{ docker_ver }}.tgz"
-    dest: "{{ playbook_dir }}/files/docker-{{ docker_ver }}"
+    src: "{{ localhost_dir }}/files/docker-{{ docker_ver }}.tgz"
+    dest: "{{ localhost_dir }}/files/docker-{{ docker_ver }}"
     remote_src: yes
     extra_opts:
     - --strip-components=1

@@ -19,7 +19,7 @@ stream {
   }
 
   server {
-    listen        127.0.0.1:6443;
+    listen        127.0.0.1:{{ nginx_proxy_port }};
     proxy_pass    kube_apiserver;
     proxy_timeout 10m;
     proxy_connect_timeout 1s;
@@ -39,7 +39,7 @@ http {
   autoindex off;
 
   server {
-    listen 8089;
+    listen {{ nginx_proxy_healthcheck_port }};
     location /healthz {
       access_log off;
       return 200;

@@ -3,26 +3,26 @@
 
 - name: 创建k8s pki 本地文件目录
   file: 
-    path: "{{ playbook_dir }}/pki"
+    path: "{{ localhost_dir }}/pki"
     state: directory
 
 - name: 拷贝 k8s-csr.conf 
   copy:
     src: k8s-csr.conf
-    dest: "{{ playbook_dir }}/pki/k8s-csr.conf"
+    dest: "{{ localhost_dir }}/pki/k8s-csr.conf"
     mode: 0600
 
 
 - name: 生成 k8s ca.key
   shell: openssl genrsa -out ca.key 2048
   args:
-    chdir: "{{ playbook_dir }}/pki"
+    chdir: "{{ localhost_dir }}/pki"
     creates: ca.key
 
 - name: 生成 k8s ca.crt
   shell: openssl req -x509 -new -nodes -key ca.key -config k8s-csr.conf -subj "/CN=kubernetes" -extensions v3_ca -days 3650 -out ca.crt
   args:
-    chdir: "{{ playbook_dir }}/pki"
+    chdir: "{{ localhost_dir }}/pki"
     creates: ca.crt
 
 - name: 生成 apiserver server.key、server.crt
@@ -31,7 +31,7 @@
     openssl req -new  -key apiserver-{{ hostvars[ item ].master_name }}.key -subj "/CN=k8s-apiserver" -reqexts v3_ext_server -config <(cat k8s-csr.conf <(printf "\nIP.2 = {{ item }}\nIP.3 = {{ cluster_service_IP }}")) -out apiserver-{{ hostvars[ item ].master_name }}.csr
     openssl x509 -in apiserver-{{ hostvars[ item ].master_name }}.csr -req -CA ca.crt -CAkey ca.key -CAcreateserial -extensions v3_ext_server -extfile <(cat k8s-csr.conf <(printf "\nIP.2 = {{ item }}\nIP.3 = {{ cluster_service_IP }}")) -days 3650 -out apiserver-{{ hostvars[ item ].master_name }}.crt
   args:
-    chdir: "{{ playbook_dir }}/pki"
+    chdir: "{{ localhost_dir }}/pki"
     executable: /bin/bash
   with_items:
       - "{{ groups['kube-master'] }}"
@@ -42,7 +42,7 @@
     openssl req -new  -key apiserver-kubelet-client.key -subj "/O=system:masters/CN=kube-apiserver-kubelet-client" -reqexts v3_ext_client -config k8s-csr.conf -out apiserver-kubelet-client.csr
     openssl x509 -in apiserver-kubelet-client.csr -req -CA ca.crt -CAkey ca.key -CAcreateserial -extensions v3_ext_client -extfile k8s-csr.conf -days 3650 -out apiserver-kubelet-client.crt
   args:
-    chdir: "{{ playbook_dir }}/pki"
+    chdir: "{{ localhost_dir }}/pki"
 
 - name: 生成 admin.key、admin.crt
   shell: |
@@ -50,7 +50,7 @@
     openssl req -new  -key admin.key -subj "/O=system:masters/CN=kubernetes-admin" -reqexts v3_ext_client -config k8s-csr.conf -out admin.csr
     openssl x509 -in admin.csr -req -CA ca.crt -CAkey ca.key -CAcreateserial -extensions v3_ext_client -extfile k8s-csr.conf -days 3650 -out admin.crt
   args:
-    chdir: "{{ playbook_dir }}/pki"
+    chdir: "{{ localhost_dir }}/pki"
 
 - name: 生成 kube-proxy.key、kube-proxy.crt
   shell: |
@@ -58,7 +58,7 @@
     openssl req -new  -key kube-proxy.key -subj "/CN=system:kube-proxy" -reqexts v3_ext_client -config k8s-csr.conf -out kube-proxy.csr
     openssl x509 -in kube-proxy.csr -req -CA ca.crt -CAkey ca.key -CAcreateserial -extensions v3_ext_client -extfile k8s-csr.conf -days 3650 -out kube-proxy.crt
   args:
-    chdir: "{{ playbook_dir }}/pki"
+    chdir: "{{ localhost_dir }}/pki"
 
 - name: 生成 kube-controller-manager.key、kube-controller-manager.crt
   shell: |
@@ -66,7 +66,7 @@
     openssl req -new  -key kube-controller-manager.key -subj "/CN=system:kube-controller-manager" -reqexts v3_ext_client -config k8s-csr.conf -out kube-controller-manager.csr
     openssl x509 -in kube-controller-manager.csr -req -CA ca.crt -CAkey ca.key -CAcreateserial -extensions v3_ext_client -extfile k8s-csr.conf -days 3650 -out kube-controller-manager.crt
   args:
-    chdir: "{{ playbook_dir }}/pki"
+    chdir: "{{ localhost_dir }}/pki"
 
 - name: 生成 kube-scheduler.key、kube-scheduler.crt
   shell: |
@@ -74,18 +74,18 @@
     openssl req -new  -key kube-scheduler.key -subj "/CN=system:kube-scheduler" -reqexts v3_ext_client -config k8s-csr.conf -out kube-scheduler.csr
     openssl x509 -in kube-scheduler.csr -req -CA ca.crt -CAkey ca.key -CAcreateserial -extensions v3_ext_client -extfile k8s-csr.conf -days 3650 -out kube-scheduler.crt
   args:
-    chdir: "{{ playbook_dir }}/pki"
+    chdir: "{{ localhost_dir }}/pki"
 
 - name: 生成 front-proxy-ca.key
   shell: openssl genrsa -out front-proxy-ca.key 2048
   args:
-    chdir: "{{ playbook_dir }}/pki"
+    chdir: "{{ localhost_dir }}/pki"
     creates: front-proxy-ca.key
 
 - name: 生成 front-proxy-ca.crt
   shell: openssl req -x509 -new -nodes -key front-proxy-ca.key -config k8s-csr.conf -subj "/CN=front-proxy-ca" -extensions v3_ca -days 3650 -out front-proxy-ca.crt
   args:
-    chdir: "{{ playbook_dir }}/pki"
+    chdir: "{{ localhost_dir }}/pki"
     creates: front-proxy-ca.crt
 
 - name: 生成 front-proxy client.key、client.crt
@@ -94,7 +94,7 @@
     openssl req -new  -key front-proxy-client.key -subj "/CN=kube-front-proxy-client" -reqexts v3_ext_client -config k8s-csr.conf -out front-proxy-client.csr
     openssl x509 -in front-proxy-client.csr -req -CA front-proxy-ca.crt -CAkey front-proxy-ca.key -CAcreateserial -extensions v3_ext_client -extfile k8s-csr.conf -days 3650 -out front-proxy-client.crt
   args:
-    chdir: "{{ playbook_dir }}/pki"
+    chdir: "{{ localhost_dir }}/pki"
 
 - name: 生成 apiserver-etcd client.key、client.crt （使用etcd的ca来生成）
   shell: |
@@ -102,13 +102,13 @@
     openssl req -new  -key apiserver-etcd-client.key -subj "/O=system:masters/CN=kube-apiserver-etcd-client" -reqexts v3_ext_client -config k8s-csr.conf -out apiserver-etcd-client.csr
     openssl x509 -in apiserver-etcd-client.csr -req -CA etcd/ca.crt -CAkey etcd/ca.key -CAcreateserial -extensions v3_ext_client -extfile k8s-csr.conf -days 3650 -out apiserver-etcd-client.crt
   args:
-    chdir: "{{ playbook_dir }}/pki"
+    chdir: "{{ localhost_dir }}/pki"
 
 - name: 生成 sa.key、sa.pub
   shell: |
     openssl genrsa -out sa.key 2048
     openssl rsa -in sa.key -pubout -out sa.pub
   args:
-    chdir: "{{ playbook_dir }}/pki"
+    chdir: "{{ localhost_dir }}/pki"
 
 - import_tasks: kubeconfig.yml

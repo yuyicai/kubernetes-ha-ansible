@@ -2,10 +2,10 @@
 - name: 下载 cni 插件
   get_url:
     url: "{{ cni_download_url }}"
-    dest: "{{ playbook_dir }}/files/cni-plugins-linux-amd64-{{ cni_ver }}.tgz"
+    dest: "{{ localhost_dir }}/files/cni-plugins-linux-amd64-{{ cni_ver }}.tgz"
 
 - name: 解压 cni 组件
   unarchive:
-    src: "{{ playbook_dir }}/files/cni-plugins-linux-amd64-{{ cni_ver }}.tgz"
-    dest: "{{ playbook_dir }}/files/cni-plugins-{{ cni_ver }}"
+    src: "{{ localhost_dir }}/files/cni-plugins-linux-amd64-{{ cni_ver }}.tgz"
+    dest: "{{ localhost_dir }}/files/cni-plugins-{{ cni_ver }}"
     remote_src: yes

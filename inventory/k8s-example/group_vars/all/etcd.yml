@@ -1,0 +1,14 @@
+# etcd 相关变量
+
+# etcd 版本
+etcd_ver: v3.3.10
+
+# etcd数据目录
+etcd_data_dir: /var/lib/etcd
+# etcd安装目录
+etcd_bin_dir: /usr/local/bin
+
+# etcd证书目录
+etcd_pki_dir: /etc/kubernetes/pki/etcd
+# etcd配置目录
+etcd_conf_dir: /etc/etcd

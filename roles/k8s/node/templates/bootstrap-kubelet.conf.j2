@@ -4,7 +4,12 @@ preferences: {}
 clusters:
 - cluster:
     certificate-authority-data: {{ ca_cert_base64.content }}
-    server: https://127.0.0.1:6443
+    server: https://127.0.0.1:
+    {%- if inventory_hostname in groups['kube-master'] -%}
+    6443
+    {%- else -%}
+    {{ nginx_proxy_port }}
+    {%- endif %} 
   name: kubernetes
 contexts:
 - context:

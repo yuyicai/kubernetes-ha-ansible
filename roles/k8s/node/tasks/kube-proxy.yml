@@ -4,12 +4,12 @@
     path: "{{ item }}"
     state: directory
   with_items:
-   - /etc/kubernetes
+   - "{{ kube_dir }}"
    - /var/lib/kube-proxy
 
 - name: 分发 kube-proxy kubeconfig 配置
   template:
-    src: "{{ playbook_dir }}/pki/kube-proxy.conf"
+    src: "{{ localhost_dir }}/pki/kube-proxy.conf"
     dest: /var/lib/kube-proxy/kubeconfig.conf
     mode: 0644
 
@@ -27,7 +27,7 @@
 
 - name: 分发 kube-proxy 二进制 文件
   copy:
-    src: "{{ playbook_dir }}/files/k8s-{{ kube_ver }}/kube-proxy"
+    src: "{{ localhost_dir }}/files/k8s-{{ kube_ver }}/kube-proxy"
     dest: "{{ kube_bin_dir }}/kube-proxy"
     mode: 755
 

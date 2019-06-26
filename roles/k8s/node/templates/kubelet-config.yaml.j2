@@ -7,7 +7,7 @@ authentication:
     cacheTTL: 2m0s
     enabled: true
   x509:
-    clientCAFile: /etc/kubernetes/pki/ca.crt
+    clientCAFile: {{ kube_dir }}/pki/ca.crt
 authorization:
   mode: Webhook
   webhook:
@@ -67,7 +67,7 @@ resolvConf: {{ resolv_conf }}
 rotateCertificates: true
 runtimeRequestTimeout: 2m0s
 serializeImagePulls: true
-staticPodPath: /etc/kubernetes/manifests
+staticPodPath: {{ pod_manifests_dir }}
 streamingConnectionIdleTimeout: 4h0m0s
 syncFrequency: 1m0s
 volumeStatsAggPeriod: 1m0s

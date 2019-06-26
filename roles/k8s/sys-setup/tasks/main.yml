@@ -11,8 +11,6 @@
 
 - import_tasks: swapoff.yml
 
-- import_tasks: modules.yml
-
 - import_tasks: sysctl.yml
 
 - import_tasks: ipvs.yml

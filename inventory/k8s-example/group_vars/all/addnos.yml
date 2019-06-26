@@ -1,0 +1,4 @@
+# 插件相关变量
+
+# flannel backend 类型：vxlan，host-gw，ali-vpc
+flannel_backend_type: vxlan

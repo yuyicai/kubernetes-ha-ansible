@@ -5,13 +5,13 @@
     state: directory
   with_items:
    - "{{ etcd_data_dir }}"
-   - /etc/kubernetes/pki/etcd
-   - /etc/etcd
+   - "{{ etcd_pki_dir }}"
+   - "{{ etcd_conf_dir }}"
 
 - name: 分发 etcd 证书 
   copy:
-    src: "{{ playbook_dir }}/pki/etcd/{{ item }}"
-    dest: "/etc/kubernetes/pki/etcd/{{ item }}"
+    src: "{{ localhost_dir }}/pki/etcd/{{ item }}"
+    dest: "{{ etcd_pki_dir }}/{{ item }}"
     mode: 0644
   with_items:
    - ca.crt
@@ -22,7 +22,7 @@
 
 - name: 分发 etcd 二进制文件 
   copy:
-    src: "{{ playbook_dir }}/files/etcd-{{ etcd_ver }}/{{ item }}"
+    src: "{{ localhost_dir }}/files/etcd-{{ etcd_ver }}/{{ item }}"
     dest: "{{ etcd_bin_dir }}/{{ item }}"
     mode: 0755
   with_items:
@@ -38,7 +38,7 @@
 - name: 分发 etcd.conf 文件 
   template:
     src: etcd.conf.yml.j2
-    dest: /etc/etcd/etcd.conf.yml
+    dest: "{{ etcd_conf_dir }}/etcd.conf.yml"
     mode: 644
 
 - name: 开机启动 etcd
