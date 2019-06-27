@@ -1,7 +1,0 @@
-- hosts: kube-master
-  roles:
-  - addons/network/flannel
-
-- hosts: kube-master
-  roles:
-  - addons/coredns

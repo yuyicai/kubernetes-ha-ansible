@@ -9,14 +9,21 @@
 
 - name: 分发 kube-proxy kubeconfig 配置
   template:
-    src: "{{ localhost_dir }}/pki/kube-proxy.conf"
-    dest: /var/lib/kube-proxy/kubeconfig.conf
+    src: "{{ localhost_dir }}/conf/kube-proxy.kubeconf"
+    dest: "{{ kube_dir }}/kube-proxy.kubeconf"
     mode: 0644
+
+- name: 更改 kube-proxy kubeconfig apiserver地址信息
+  replace:
+    path: "{{ kube_dir }}/kube-proxy.kubeconf"
+    regexp: "6443"
+    replace: "{{ nginx_proxy_port }}"
+  when: inventory_hostname in groups['kube-node']
 
 - name: 分发 kube-proxy 配置文件
   template:
     src: kube-proxy-config.yaml.j2
-    dest: "/var/lib/kube-proxy/config.yaml"
+    dest: "{{ kube_dir }}/kube-proxy-config.yaml"
     mode: 0644
 
 - name: 分发 kube-proxy service 文件

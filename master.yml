@@ -1,3 +1,0 @@
-- hosts: kube-master
-  roles:
-  - k8s/master

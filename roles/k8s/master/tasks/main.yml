@@ -10,16 +10,16 @@
 
 - name: 分发 kube-controller-manager、kube-scheduler kubeconfig 文件
   copy:
-    src: "{{ localhost_dir }}/pki/{{ item }}"
+    src: "{{ localhost_dir }}/conf/{{ item }}"
     dest: "{{ kube_dir }}/{{ item }}"
     mode: 0600
   with_items:
-    - controller-manager.conf
-    - scheduler.conf
+    - controller-manager.kubeconf
+    - scheduler.kubeconf
 
 - name: 分发 admin kubeconfig 文件
   copy:
-    src: "{{ localhost_dir }}/pki/admin.conf"
+    src: "{{ localhost_dir }}/conf/admin.kubeconf"
     dest: ~/.kube/config
     mode: 0600
 

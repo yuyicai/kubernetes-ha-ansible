@@ -1,4 +1,0 @@
-- hosts: kube-cluster
-  roles:
-  - k8s/sys-setup
-  - k8s/node

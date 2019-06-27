@@ -50,7 +50,7 @@
     - filter
     - nat
 
-- name: 清理 IPVC
+- name: 清理 ipvc
   shell: "ipvsadm -C"
   when:
     - kube_proxy_mode == 'ipvs' and inventory_hostname in groups['kube-cluster']
@@ -110,6 +110,10 @@
     - /run/kubernetes
     - /var/log/pods/
     - /var/lib/cni
+    - "{{ etcd_conf_dir }}"
+    - "{{ etcd_pki_dir }}"
+    - "{{ pod_manifests_dir }}"
+    - "{{ nginx_proxy_dir }}"
   ignore_errors: yes
 
 - name: 清理二进制文件

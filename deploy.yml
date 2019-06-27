@@ -1,36 +1,36 @@
+- hosts: localhost
+  roles:
+  - {role: download, tags: download}
+
 - hosts: kube-cluster
   roles:
-  - cri/docker
+  - {role: cri/docker, tags: cri}
 
 - hosts: localhost
   roles:
-  - etcd/pki
+  - {role: etcd/pki, tags: ["etcd-pki", "all-pki"]}
 
 - hosts: etcd
   roles:
-  - etcd/etcd
+  - {role: etcd/etcd, tags: etcd}
 
 - hosts: localhost
   roles:
-  - k8s/pki
+  - {role: k8s/pki, tags: ["k8s-pki", "all-pki"]}
 
 - hosts: kube-master
   roles:
-  - k8s/master
+  - {role: k8s/master, tags: master}
 
 - hosts: kube-cluster
   roles:
-  - k8s/sys-setup
-
-- hosts: kube-cluster
-  roles:
-  - k8s/sys-setup
-  - k8s/node
+  - {role: k8s/sys-setup, tags: node}
+  - {role: k8s/node, tags: node}
 
 - hosts: kube-master
   roles:
-  - addons/network/flannel
+  - {role: addons/network/flannel, tags: ["network", "addons"]}
 
 - hosts: kube-master
   roles:
-  - addons/coredns
+  - {role: addons/coredns, tags: ["coredns", "addons"]}

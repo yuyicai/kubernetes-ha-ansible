@@ -53,7 +53,7 @@
 - name: 分发 kubelet confing 文件
   template:
     src: kubelet-config.yaml.j2
-    dest: "/var/lib/kubelet/config.yaml"
+    dest: "{{ kube_dir }}/kubelet-config.yaml"
     mode: 0644
 
 - name: 分发 kubelet二进制 文件
