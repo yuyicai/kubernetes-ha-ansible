@@ -1,0 +1,25 @@
+etcd_member_name: "{{ etcd_name }}"
+
+etcd_listen_peer_urls: "https://{{ inventory_hostname }}:2380"
+
+etcd_listen_client_urls: "https://{{ inventory_hostname }}:2379"
+
+etcd_initial_advertise_peer_urls: "https://{{ inventory_hostname }}:2380"
+
+etcd_advertise_client_urls: "https://{{ inventory_hostname }}:2379"
+
+etcd_initial_cluster: "{% for host in groups['etcd'] %}{{ hostvars[host].etcd_name }}=https://{{ host }}:2380{% if not loop.last %},{% endif %}{% endfor %}"
+
+etcd_initial_cluster_token: etcd-cluster
+
+etcd_cert_file: "{{ etcd_pki_dir }}/server-{{ etcd_name }}.crt"
+
+etcd_key_file: "{{ etcd_pki_dir }}/server-{{ etcd_name }}.key"
+
+etcd_trusted_ca_file: "{{ etcd_pki_dir }}/ca.crt"
+
+etcd_peer_cert_file: "{{ etcd_pki_dir }}/peer-{{ etcd_name }}.crt"
+
+etcd_peer_key_file: "{{ etcd_pki_dir }}/peer-{{ etcd_name }}.key"
+
+etcd_peer_trusted_ca_file: "{{ etcd_pki_dir }}/ca.crt"

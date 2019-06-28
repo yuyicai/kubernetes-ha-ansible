@@ -54,6 +54,7 @@
   shell: "ipvsadm -C"
   when:
     - kube_proxy_mode == 'ipvs' and inventory_hostname in groups['kube-cluster']
+  ignore_errors: yes
 
 - name: 检查 kube_ipvs0 网桥
   stat:
@@ -90,6 +91,7 @@
     state: stopped
   with_items:
     - docker
+  failed_when: false
 
 - name: systemctl daemon-reload
   systemd:

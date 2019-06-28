@@ -16,9 +16,9 @@
 - name: 更改 kube-proxy kubeconfig apiserver地址信息
   replace:
     path: "{{ kube_dir }}/kube-proxy.kubeconf"
-    regexp: "6443"
-    replace: "{{ nginx_proxy_port }}"
-  when: inventory_hostname in groups['kube-node']
+    regexp: '6443'
+    replace: '{{ nginx_proxy_port }}'
+  when: inventory_hostname not in groups['kube-master']
 
 - name: 分发 kube-proxy 配置文件
   template:

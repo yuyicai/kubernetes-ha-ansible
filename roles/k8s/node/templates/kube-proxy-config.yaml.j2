@@ -1,6 +1,6 @@
 apiVersion: kubeproxy.config.k8s.io/v1alpha1
 kind: KubeProxyConfiguration
-bindAddress: 0.0.0.0
+bindAddress: {{ kube_proxy_bind_address }}
 clientConnection:
   acceptContentTypes: ""
   burst: 10
@@ -16,8 +16,8 @@ conntrack:
   tcpCloseWaitTimeout: 1h0m0s
   tcpEstablishedTimeout: 24h0m0s
 enableProfiling: false
-healthzBindAddress: 0.0.0.0:10256
-hostnameOverride: {{ inventory_hostname }}
+healthzBindAddress: {{ kube_proxy_bind_address }}:10256
+hostnameOverride: {{ hostname_override }}
 iptables:
   masqueradeAll: false
   masqueradeBit: 14

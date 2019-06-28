@@ -1,0 +1,5 @@
+hostname_override: "{{ node_name }}"
+
+kubelet_address: 0.0.0.0
+
+kube_proxy_bind_address: 0.0.0.0

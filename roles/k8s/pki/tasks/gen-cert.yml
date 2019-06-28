@@ -15,9 +15,9 @@
 
 - name: 生成 apiserver server.key、server.crt
   shell: |
-    openssl genrsa -out apiserver-{{ hostvars[ item ].master_name }}.key 2048
-    openssl req -new  -key apiserver-{{ hostvars[ item ].master_name }}.key -subj "/CN=k8s-apiserver" -reqexts v3_ext_server -config <(cat k8s-csr.conf <(printf "\nIP.2 = {{ item }}\nIP.3 = {{ cluster_service_IP }}")) -out apiserver-{{ hostvars[ item ].master_name }}.csr
-    openssl x509 -in apiserver-{{ hostvars[ item ].master_name }}.csr -req -CA ca.crt -CAkey ca.key -CAcreateserial -extensions v3_ext_server -extfile <(cat k8s-csr.conf <(printf "\nIP.2 = {{ item }}\nIP.3 = {{ cluster_service_IP }}")) -days 3650 -out apiserver-{{ hostvars[ item ].master_name }}.crt
+    openssl genrsa -out apiserver-{{ hostvars[ item ].node_name }}.key 2048
+    openssl req -new  -key apiserver-{{ hostvars[ item ].node_name }}.key -subj "/CN=k8s-apiserver" -reqexts v3_ext_server -config <(cat k8s-csr.conf <(printf "\nIP.2 = {{ item }}\nIP.3 = {{ cluster_service_IP }}")) -out apiserver-{{ hostvars[ item ].node_name }}.csr
+    openssl x509 -in apiserver-{{ hostvars[ item ].node_name }}.csr -req -CA ca.crt -CAkey ca.key -CAcreateserial -extensions v3_ext_server -extfile <(cat k8s-csr.conf <(printf "\nIP.2 = {{ item }}\nIP.3 = {{ cluster_service_IP }}")) -days 3650 -out apiserver-{{ hostvars[ item ].node_name }}.crt
   args:
     chdir: "{{ localhost_dir }}/pki"
     executable: /bin/bash

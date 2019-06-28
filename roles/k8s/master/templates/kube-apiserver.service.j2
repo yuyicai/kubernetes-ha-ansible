@@ -4,8 +4,8 @@ Documentation=https://kubernetes.io/docs/home/
 
 [Service]
 ExecStart={{ kube_bin_dir }}/kube-apiserver \
-    --advertise-address={{ inventory_hostname }} \
-    --bind-address=0.0.0.0 \
+    --advertise-address={{ apiserver_advertise_address }} \
+    --bind-address={{ apiserver_bind_address }} \
     --allow-privileged=true \
     --authorization-mode=Node,RBAC \
     --client-ca-file={{ kube_dir }}/pki/ca.crt \
@@ -14,7 +14,7 @@ ExecStart={{ kube_bin_dir }}/kube-apiserver \
     --etcd-cafile={{ etcd_pki_dir }}/ca.crt \
     --etcd-certfile={{ kube_dir }}/pki/apiserver-etcd-client.crt \
     --etcd-keyfile={{ kube_dir }}/pki/apiserver-etcd-client.key \
-    --etcd-servers={% for host in groups['etcd'] %}https://{{ host }}:2379{% if not loop.last %},{% endif %}{% endfor %} \
+    --etcd-servers={{ apiserver_etcd_servers }} \
     --insecure-port=0 \
     --kubelet-client-certificate={{ kube_dir }}/pki/apiserver-kubelet-client.crt \
     --kubelet-client-key={{ kube_dir }}/pki/apiserver-kubelet-client.key \
@@ -29,8 +29,8 @@ ExecStart={{ kube_bin_dir }}/kube-apiserver \
     --secure-port=6443 \
     --service-account-key-file={{ kube_dir }}/pki/sa.pub \
     --service-cluster-ip-range={{ service_CIDR }} \
-    --tls-cert-file={{ kube_dir }}/pki/apiserver-{{ master_name }}.crt \
-    --tls-private-key-file={{ kube_dir }}/pki/apiserver-{{ master_name }}.key
+    --tls-cert-file={{ apiserver_tls_cert_file }} \
+    --tls-private-key-file={{ apiserver_tls_private_key_file }}
 Restart=on-failure
 RestartSec=5
 

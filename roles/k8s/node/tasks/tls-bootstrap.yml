@@ -48,7 +48,7 @@
         src: "{{ localhost_dir }}/pki/ca.crt"
       register: ca_cert_base64
 
-    - name: 生产bootstrap-kubelet.conf
+    - name: 生成bootstrap-kubelet.conf
       template:
         src: bootstrap-kubelet.conf.j2
         dest: "{{ localhost_dir }}/pki/bootstrap-kubelet.conf"

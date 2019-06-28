@@ -1,0 +1,9 @@
+apiserver_advertise_address: "{{ inventory_hostname }}"
+
+apiserver_bind_address: 0.0.0.0
+
+apiserver_etcd_servers: "{% for host in groups['etcd'] %}https://{{ host }}:2379{% if not loop.last %},{% endif %}{% endfor %}"
+
+apiserver_tls_cert_file: "{{ kube_dir }}/pki/apiserver-{{ node_name }}.crt"
+
+apiserver_tls_private_key_file: "{{ kube_dir }}/pki/apiserver-{{ node_name }}.key"

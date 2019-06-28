@@ -52,8 +52,8 @@
   with_items:
    - ca.crt
    - ca.key
-   - "apiserver-{{ master_name }}.crt"
-   - "apiserver-{{ master_name }}.key"
+   - "apiserver-{{ node_name }}.crt"
+   - "apiserver-{{ node_name }}.key"
    - apiserver-etcd-client.crt
    - apiserver-etcd-client.key
    - apiserver-kubelet-client.crt

@@ -2,8 +2,11 @@
 # https://github.com/kubernetes/kubernetes/blob/master/pkg/proxy/ipvs/README.md#run-kube-proxy-in-ipvs-mode
 - name: 安装 IPVS 依赖
   package:
-    name: ipset
+    name: "{{ item }}"
     state: present
+  with_items:
+    - ipset
+    - ipvsadm
 
 - name: 加载 IPVS 所需内核模块
   modprobe:
