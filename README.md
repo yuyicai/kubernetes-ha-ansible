@@ -1,10 +1,79 @@
-# kube-ansible
+# kubernetes-ha-ansible
+
+部署&网络：ansible快速一键部署二进制kubernetes集群，所有二进制组件下载地址都是国内网络达，真正快速一键部署  
+
+高可用：采用在每个worker节点部署代理的方式，完全兼容各种有网络限制的云环境（例如阿里云）。 
+
+- **kubernetes:** v1.14.x、v.15.x
+- **etcd:** v3.3.10
+- **容器运行时:** docker 18.06.x
+- **系统:** Ubuntu 16.04+、CentOS 7.4+(TODO)
+
+# 目录结构
+
+```
+.  
+├── 
+├── 
+├── inventory······················· 配置目录(hosts、变量)
+├── kube-cluster···················· 部署的时候自动生成，存放下载的二进制文件、生成的证书和配置
+└── roles···························
+    ├── download···················· 1、下载二进制文件(国内网络可达)
+    ├── cri························· 2、部署容器运行时(选择一个安装)    
+    │   ├── docker
+    │   ├── cri-o(TODO)
+    │   └── containerd(TODO)
+    ├── etcd························ 3、部署etcd集群  
+    │   ├── pki(生成etcd证书)
+    │   └── etcd(部署etcd集群)
+    ├── k8s························· 4、部署kubernetes集群 
+    │   ├── pki(生成kubernetes集群证书)
+    │   ├── master(部署master节点)
+    │   ├── sys-setup(配置节点)
+    │   └── node(部署node节点)
+    └── addons······················ 5、部署扩展插件(按需选择)    
+        ├── network
+        │   ├── flannel
+        │   └── calico(TODO)
+        ├── croedns
+        ├── metrics_server(TODO)
+        └── ingress_controller(TODO) 
+```
 
 
 
+# 说明文档
 
+（TODO）
 
-# 快速部署部署
+- 部署说明  
+  
+  1、[前期准备](docs/deploy/1、前期准备.md)  
+  2、[配置节点IP和变量](docs/deploy/2、配置节点IP和变量.md)   
+  3、[快速部署](docs/deploy/3、快速部署.md)   
+  4、[分步部署](docs/deploy/4、分步部署.md)  
+  5、[离线部署](docs/deploy/5、离线部署.md)  
+  6、[重置集群](docs/deploy/6、重置集群.md)  
+  
+- roles说明  
+  
+  //TODO
+
+  1、下载二进制文件  
+  2、部署容器运行时  
+  3、部署etcd集群  
+  ​ ​ ​ ​ ​ ​ 3.1、生成etcd证书  
+  ​ ​ ​ ​ ​ ​ 3.2、部署etcd集群  
+  4、部署kubernetes集群  
+  ​ ​ ​ ​ ​ ​  4.1、生成kubernetes集群证书  
+  ​ ​ ​ ​ ​ ​ 4.2、部署master节点  
+  ​ ​ ​ ​ ​ ​ 4.3、节点配置  
+  ​ ​ ​ ​ ​ ​ 4.4、部署node节点  
+  5、部署扩展插件  
+  
+  
+
+# 快速部署
 
 - 复制一份配置文件
   根据自己的集群IP地址信息配置`inventory/k8s-cluster/hosts.ini`文件
@@ -47,31 +116,3 @@
   worker3   Ready    <none>   112s    v1.15.0   172.16.16.117   <none>        Ubuntu 18.04.2 LTS   4.15.0-51-generic   docker://18.6.3
   worker4   Ready    <none>   112s    v1.15.0   172.16.16.118   <none>        Ubuntu 18.04.2 LTS   4.15.0-51-generic   docker://18.6.3
   ```
-
-
-# roles目录结构
-```
-.  
-├── inventory     //配置目录  
-└── roles  
-    ├── download  //下载文件  
-    ├── cri       //容器运行时(选择一个安装)    
-    │   ├── docker  
-    │   ├── cri-o   //TODO
-    │   └── containerd   //TODO
-    ├── etcd        //etcd 集群  
-    │   ├── pki  
-    │   └── etcd  
-    ├── k8s         //kubernetes 集群 
-    │   ├── pki   
-    │   ├── sys-setup  
-    │   ├── master  
-    │   └── node      
-    └── addons     //扩展插件(按需选择)    
-        ├── network  
-        │   ├── flannel  
-        │   └── calico  //TODO
-        ├── croedns 
-        ├── metrics_server //TODO
-        └── ingress_controller //TODO 
-```
