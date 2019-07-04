@@ -1,13 +1,42 @@
 # kubernetes-ha-ansible
 
-部署&网络：ansible快速一键部署二进制kubernetes集群，所有二进制组件下载地址都是国内网络达，真正快速一键部署  
-
-高可用：采用在每个worker节点部署代理的方式，完全兼容各种有网络限制的云环境（例如阿里云）。 
-
 - **kubernetes:** v1.14.x、v.15.x
 - **etcd:** v3.3.10
 - **容器运行时:** docker 18.06.x
 - **系统:** Ubuntu 16.04+、CentOS 7.4+(TODO)
+
+部署：ansible快速一键部署二进制kubernetes集群，所有二进制组件下载地址都是国内网络达，真正快速一键部署 。 
+
+高可用：采用在每个worker节点部署代理的方式，完全兼容各种有网络限制的云环境（例如阿里云）。  
+
+# 说明文档
+
+
+- 部署说明  
+  
+  1、[前期准备](docs/deploy/1、前期准备.md)  
+  2、[配置节点IP和变量](docs/deploy/2、配置节点IP和变量.md)   
+  3、[快速部署](docs/deploy/3、快速部署.md)   
+  4、[分步部署](docs/deploy/4、分步部署.md)  
+  5、[离线部署](docs/deploy/5、离线部署.md)  
+  6、[重置集群](docs/deploy/6、重置集群.md)  
+  
+- roles说明  
+  
+  //TODO
+
+  1、下载二进制文件  
+  2、部署容器运行时  
+  3、部署etcd集群  
+  ​ ​ ​ ​ ​ ​ 3.1、生成etcd证书  
+  ​ ​ ​ ​ ​ ​ 3.2、部署etcd集群  
+  4、部署kubernetes集群  
+  ​ ​ ​ ​ ​ ​  4.1、生成kubernetes集群证书  
+  ​ ​ ​ ​ ​ ​ 4.2、部署master节点  
+  ​ ​ ​ ​ ​ ​ 4.3、节点配置  
+  ​ ​ ​ ​ ​ ​ 4.4、部署node节点  
+  5、部署扩展插件  
+
 
 # 目录结构
 
@@ -40,38 +69,6 @@
         └── ingress_controller(TODO) 
 ```
 
-
-
-# 说明文档
-
-（TODO）
-
-- 部署说明  
-  
-  1、[前期准备](docs/deploy/1、前期准备.md)  
-  2、[配置节点IP和变量](docs/deploy/2、配置节点IP和变量.md)   
-  3、[快速部署](docs/deploy/3、快速部署.md)   
-  4、[分步部署](docs/deploy/4、分步部署.md)  
-  5、[离线部署](docs/deploy/5、离线部署.md)  
-  6、[重置集群](docs/deploy/6、重置集群.md)  
-  
-- roles说明  
-  
-  //TODO
-
-  1、下载二进制文件  
-  2、部署容器运行时  
-  3、部署etcd集群  
-  ​ ​ ​ ​ ​ ​ 3.1、生成etcd证书  
-  ​ ​ ​ ​ ​ ​ 3.2、部署etcd集群  
-  4、部署kubernetes集群  
-  ​ ​ ​ ​ ​ ​  4.1、生成kubernetes集群证书  
-  ​ ​ ​ ​ ​ ​ 4.2、部署master节点  
-  ​ ​ ​ ​ ​ ​ 4.3、节点配置  
-  ​ ​ ​ ​ ​ ​ 4.4、部署node节点  
-  5、部署扩展插件  
-  
-  
 
 # 快速部署
 
