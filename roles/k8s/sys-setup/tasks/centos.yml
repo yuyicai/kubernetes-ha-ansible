@@ -1,0 +1,20 @@
+---
+# https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+# Setting SELinux in permissive mode by running setenforce 0 and sed ... effectively disables it. This is required to allow containers to access the host filesystem, which is needed by pod networks for example. You have to do this until SELinux support is improved in the kubelet.
+
+# Set SELinux in permissive mode (effectively disabling it)
+# setenforce 0
+# sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
+
+- name: 检测 selinux 配置是否存在
+  stat:
+    path: /etc/selinux/config
+  register: selinux
+
+- name: 设置 selinux 策略
+  selinux:
+    policy: targeted
+    state: permissive
+  when:
+    - selinux.stat.exists
+  changed_when: False

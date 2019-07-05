@@ -42,6 +42,6 @@
       ip_vs_sh
       {% if enable_nf_conntrack_ipv4 is failed -%}
       nf_conntrack
-      {%-   else -%}
+      {%- else -%}
       nf_conntrack_ipv4
-      {%-   endif -%}
+      {%- endif -%}

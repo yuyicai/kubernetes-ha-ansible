@@ -1,4 +1,7 @@
 ---
+- import_tasks: centos.yml
+  when: ansible_os_family == "RedHat"
+
 - name: 加载 br_netfilter 内核模块
   modprobe:
     name: br_netfilter
