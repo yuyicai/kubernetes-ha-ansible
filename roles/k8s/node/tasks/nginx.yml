@@ -18,4 +18,4 @@
       template:
         src: nginx-proxy.yml.j2
         dest: "{{ pod_manifests_dir }}/nginx-proxy.yml"
-  when: inventory_hostname in groups['kube-node']
+  when: inventory_hostname not in groups['kube-master']

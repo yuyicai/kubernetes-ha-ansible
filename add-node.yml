@@ -1,0 +1,8 @@
+- hosts: new-node
+  roles:
+  - {role: cri/docker, tags: cri}
+
+- hosts: new-node
+  roles:
+  - {role: k8s/sys-setup, tags: node}
+  - {role: k8s/node, tags: node}
