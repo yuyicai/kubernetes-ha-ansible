@@ -3,6 +3,7 @@
   systemd:
     name: "{{ item }}"
     state: stopped
+    enabled: no
   with_items:
     - kubelet
     - kube-proxy
@@ -11,19 +12,6 @@
     - kube-scheduler
     - etcd
   failed_when: false
-
-- name: 清理services 文件
-  file:
-    path: "/etc/systemd/system/{{ item }}.service"
-    state: absent
-  with_items:
-    - kubelet
-    - kube-proxy
-    - kube-apiserver
-    - kube-controller-manager
-    - kube-scheduler
-    - etcd
-    - docker
 
 - name: 清理所有容器
   shell: "{{ docker_bin_dir }}/docker ps -aq | xargs -r docker rm -fv"
@@ -53,7 +41,7 @@
 - name: 清理 ipvc
   shell: "ipvsadm -C"
   when:
-    - kube_proxy_mode == 'ipvs' and inventory_hostname in groups['kube-cluster']
+    - kube_proxy_mode == 'ipvs'
   ignore_errors: yes
 
 - name: 检查 kube_ipvs0 网桥
@@ -89,9 +77,25 @@
   systemd:
     name: "{{ item }}"
     state: stopped
+    enabled: no
   with_items:
     - docker
+    - containerd
   failed_when: false
+
+- name: 清理services 文件
+  file:
+    path: "/etc/systemd/system/{{ item }}.service"
+    state: absent
+  with_items:
+    - kubelet
+    - kube-proxy
+    - kube-apiserver
+    - kube-controller-manager
+    - kube-scheduler
+    - etcd
+    - docker
+    - containerd
 
 - name: systemctl daemon-reload
   systemd:
@@ -123,25 +127,53 @@
     path: "{{ item }}"
     state: absent
   with_items:
-     - /opt/cni
-     - "{{ kube_bin_dir }}/kubelet"
-     - "{{ kube_bin_dir }}/kube-proxy"
-     - "{{ kube_bin_dir }}/kube-apiserver"
-     - "{{ kube_bin_dir }}/kube-controller-manager"
-     - "{{ kube_bin_dir }}/kube-scheduler"
-     - "{{ kube_bin_dir }}/kubectl"
-     - "{{ etcd_bin_dir }}/etcd"
-     - "{{ etcd_bin_dir }}/etcdctl"
-     - "{{ docker_bin_dir }}/docker"
-     - "{{ docker_bin_dir }}/docker-containerd"
-     - "{{ docker_bin_dir }}/docker-containerd-ctr"
-     - "{{ docker_bin_dir }}/docker-containerd-shim"
-     - "{{ docker_bin_dir }}/dockerd"
-     - "{{ docker_bin_dir }}/docker-init"
-     - "{{ docker_bin_dir }}/docker-proxy"
-     - "{{ docker_bin_dir }}/docker-runc"
+    - /opt/cni
+    - "{{ kube_bin_dir }}/kubelet"
+    - "{{ kube_bin_dir }}/kube-proxy"
+    - "{{ kube_bin_dir }}/kube-apiserver"
+    - "{{ kube_bin_dir }}/kube-controller-manager"
+    - "{{ kube_bin_dir }}/kube-scheduler"
+    - "{{ kube_bin_dir }}/kubectl"
+    - "{{ etcd_bin_dir }}/etcd"
+    - "{{ etcd_bin_dir }}/etcdctl"
   ignore_errors: yes
   when: delete_bin | bool
+
+- name: 清理docker二进制文件(18.06.x)
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ docker_bin_dir }}/docker"
+    - "{{ docker_bin_dir }}/docker-containerd"
+    - "{{ docker_bin_dir }}/docker-containerd-ctr"
+    - "{{ docker_bin_dir }}/docker-containerd-shim"
+    - "{{ docker_bin_dir }}/dockerd"
+    - "{{ docker_bin_dir }}/docker-init"
+    - "{{ docker_bin_dir }}/docker-proxy"
+    - "{{ docker_bin_dir }}/docker-runc"
+  ignore_errors: yes
+  when:
+    - delete_bin | bool
+    - docker_ver_less_than_18_09 | bool
+
+- name: 清理docker二进制文件
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ docker_bin_dir }}/containerd"
+    - "{{ docker_bin_dir }}/containerd-shim"
+    - "{{ docker_bin_dir }}/ctr"
+    - "{{ docker_bin_dir }}/docker"
+    - "{{ docker_bin_dir }}/dockerd"
+    - "{{ docker_bin_dir }}/docker-init"
+    - "{{ docker_bin_dir }}/docker-proxy"
+    - "{{ docker_bin_dir }}/runc"
+  ignore_errors: yes
+  when:
+    - delete_bin | bool
+    - not docker_ver_less_than_18_09 | bool
 
 - name: 重启网络
   systemd:
