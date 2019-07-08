@@ -83,3 +83,30 @@
     - kube-apiserver
     - kube-controller-manager
     - kube-scheduler
+
+- name: apiserver 健康检查
+  uri:
+    url: https://127.0.0.1:6443/healthz
+    validate_certs: no
+    client_cert: "{{ kube_dir }}/pki/ca.crt"
+    client_key: "{{ kube_dir }}/pki/ca.key"
+  register: apiserver_health_check
+  until: apiserver_health_check.status == 200
+  retries: 20
+  delay: 5
+
+- name: scheduler 健康检查
+  uri:
+    url: http://127.0.0.1:10251/healthz
+  register: scheduler_health_check
+  until: scheduler_health_check.status == 200
+  retries: 20
+  delay: 5
+
+- name: controller-manager 健康检查
+  uri:
+    url: http://127.0.0.1:10252/healthz
+  register: controller_manager_result
+  until: controller_manager_result.status == 200
+  retries: 20
+  delay: 5
