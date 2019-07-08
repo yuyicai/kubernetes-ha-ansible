@@ -3,7 +3,7 @@
 - **kubernetes:** v1.14.x、v.15.x
 - **etcd:** v3.3.10
 - **容器运行时:** docker 18.06.x
-- **系统:** Ubuntu 16.04+、CentOS 7.4+(TODO)
+- **系统:** Ubuntu 16.04+、CentOS 7.4+
 
 部署：ansible快速一键部署二进制kubernetes集群，所有二进制组件下载地址都是国内网络达，真正快速一键部署 。 
 

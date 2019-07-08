@@ -6,7 +6,7 @@
 # setenforce 0
 # sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 
-- name: 检测 selinux 配置是否存在
+- name: 检查 selinux 配置是否存在
   stat:
     path: /etc/selinux/config
   register: selinux
