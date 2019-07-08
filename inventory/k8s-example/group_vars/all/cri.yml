@@ -1,9 +1,10 @@
 # 运行时相关变量
 
-# docker版本
-docker_ver: 18.06.3-ce
-# docker二进制下载地址：
-# https://mirror.azure.cn/docker-ce/linux/static/stable/x86_64/docker-{{ docker_ver }}.tgz 
-docker_download_url: https://mirrors.aliyun.com/docker-ce/linux/static/stable/x86_64/docker-{{ docker_ver }}.tgz 
+# docker版本 18.06.3-ce、18.09.7
+# 注意18.09.x后面是没有"-ce"的
+docker_ver: 18.09.7
+# 检查docker版本是否是18.09以下，即是18.06.x-ce版本
+docker_ver_less_than_18_09: "{{ docker_ver is version('18.09.0', '<') }}"
+
 # docker安装目录
 docker_bin_dir: /usr/local/bin

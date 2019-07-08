@@ -1,28 +1,31 @@
 [Unit]
 Description=Docker Application Container Engine
-Documentation=http://docs.docker.com
-After=network.target docker.socket
-Wants=docker.socket
+Documentation=https://docs.docker.com
+{% if not docker_ver_less_than_18_09 %}
+BindsTo=containerd.service
+{% endif %}
+After=network-online.target {% if not docker_ver_less_than_18_09 %}containerd.service{% endif %} 
+Wants=network-online.target docker.socket
 
 [Service]
 Type=notify
+ExecStart={{ docker_bin_dir }}/dockerd
 ExecReload=/bin/kill -s HUP $MAINPID
-Delegate=yes
-KillMode=process
-ExecStart={{ docker_bin_dir }}/dockerd \
-    $DOCKER_OPTS \
-    $DOCKER_STORAGE_OPTIONS \
-    $DOCKER_NETWORK_OPTIONS \
-    $DOCKER_DNS_OPTIONS \
-    $INSECURE_REGISTRY
-TasksMax=infinity
-LimitNOFILE=1048576
-LimitNPROC=1048576
-LimitCORE=infinity
-TimeoutStartSec=30s
-Restart=on-failure
+
+TimeoutSec=0
+RestartSec=2
+Restart=always
+
 StartLimitBurst=3
 StartLimitInterval=60s
+
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+
+TasksMax=infinity
+Delegate=yes
+KillMode=process
 
 [Install]
 WantedBy=multi-user.target

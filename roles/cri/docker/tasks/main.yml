@@ -4,7 +4,7 @@
     path: /etc/docker
     state: directory
 
-- name: 复制 docker二进制文件到目标主机
+- name: 复制 docker二进制文件到目标主机(18.06.x)
   copy:
     src: "{{ localhost_dir }}/files/docker-{{ docker_ver }}/{{ item }}"
     dest: "{{ docker_bin_dir }}"
@@ -18,17 +18,46 @@
     - docker-init
     - docker-proxy
     - docker-runc
+  when: docker_ver_less_than_18_09 | bool
+
+- name: 复制 docker二进制文件到目标主机
+  copy:
+    src: "{{ localhost_dir }}/files/docker-{{ docker_ver }}/{{ item }}"
+    dest: "{{ docker_bin_dir }}"
+    mode: 0755
+  with_items:
+    - containerd
+    - containerd-shim
+    - ctr
+    - docker
+    - dockerd
+    - docker-init
+    - docker-proxy
+    - runc
+  when: not docker_ver_less_than_18_09 | bool
 
 - name: 创建 docker.service 文件
   template:
     src: docker.service.j2
     dest: /etc/systemd/system/docker.service
 
-- name: systemd daemon_reload
+- name: 创建 containerd.service 文件
+  template:
+    src: containerd.service.j2
+    dest: /etc/systemd/system/containerd.service
+  when: not docker_ver_less_than_18_09 | bool
+
+- name: 启动 containerd
   systemd:
+    name: containerd
+    enabled: yes
     daemon_reload: yes
+    state: restarted
+  when: not docker_ver_less_than_18_09 | bool
 
 - name: 启动 docker
   systemd:
-    state: started
     name: docker
+    enabled: yes
+    daemon_reload: yes
+    state: restarted
