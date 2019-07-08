@@ -4,6 +4,7 @@
     path: "{{ item }}"
     state: directory
   with_items:
+   - "{{ etcd_pki_dir }}"
    - "{{ kube_dir }}/pki"
    - "{{ kube_dir }}"
    - ~/.kube
@@ -64,6 +65,12 @@
    - front-proxy-client.key
    - sa.pub
    - sa.key
+
+- name: 分发 etcd ca 证书 
+  copy:
+    src: "{{ localhost_dir }}/pki/etcd/ca.crt"
+    dest: "{{ etcd_pki_dir }}/ca.crt"
+    mode: 0600
 
 - name: 设置开机启动 kube-apiserver、kube-controller-manager、kube-scheduler
   systemd:

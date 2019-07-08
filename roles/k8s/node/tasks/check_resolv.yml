@@ -1,0 +1,16 @@
+---
+- name: 检查 /etc/resolv.conf
+  shell: grep "^nameserver[[:space:]]*127.0.0.53" /etc/resolv.conf
+  register: local_resolv
+  failed_when: false
+  changed_when: no
+
+- name: 检查 /run/systemd/resolve/resolv.conf 否存在
+  stat:
+    path: /run/systemd/resolve/resolv.conf
+  register: run_resolv
+  when: local_resolv.rc == 0
+
+- name: 配置 kube_resolv_conf
+  set_fact:
+    kube_resolv_conf: "{% if local_resolv.rc == 0 and run_resolv.stat.exists %}/run/systemd/resolve/resolv.conf{% else %}{{ resolv_conf }}{% endif %}"

@@ -25,7 +25,7 @@ kube_dir: /etc/kubernetes
 # nginx-proxy配置目录
 nginx_proxy_dir: /etc/kubernetes/nginx
 
-# kube-proxy 模式 iptables 或者 ipvs
+# kube-proxy 模式 iptables、ipvs
 kube_proxy_mode: ipvs
 
 # nginx-proxy 检查检查端口
@@ -33,7 +33,8 @@ nginx_proxy_healthcheck_port: 8089
 # nginx-proxy 服务端口
 nginx_proxy_port: 8443
 
-# DNS 上游服务配置
-# 如果宿主机的/etc/resolv.conf配置是：nameserver 127.0.0.53 具体见：https://github.com/coredns/coredns/tree/master/plugin/loop
-# 那么需要使用：/run/systemd/resolve/resolv.conf，获取真正的上游服务配置，不然coredns无法启动
+# DNS 配置
+# https://github.com/coredns/coredns/tree/master/plugin/loop
+# ansible部署时会检测/etc/resolv.conf是否存在"nameserver 127.0.0.53"，如果存在将会把kubelet的resolvConf配置为/run/systemd/resolve/resolv.conf
+# 默认使用resolv_conf的值作为kubelet的resolvConf配置
 resolv_conf: /etc/resolv.conf

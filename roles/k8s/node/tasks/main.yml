@@ -1,5 +1,5 @@
 ---
-- name: 创建 静态 pod 配置目录
+- name: 创建静态 pod 配置目录
   file:
     path: "{{ pod_manifests_dir }}"
     state: directory
@@ -8,6 +8,8 @@
 - import_tasks: tls-bootstrap.yml
 
 - import_tasks: nginx.yml
+
+- import_tasks: check_resolv.yml
 
 - import_tasks: kubelet.yml
 
