@@ -12,7 +12,7 @@
   copy:
     src: "{{ localhost_dir }}/pki/etcd/{{ item }}"
     dest: "{{ etcd_pki_dir }}/{{ item }}"
-    mode: 0644
+    mode: 0600
   with_items:
    - ca.crt
    - "server-{{ etcd_name }}.crt"
@@ -39,17 +39,13 @@
   template:
     src: etcd.conf.yml.j2
     dest: "{{ etcd_conf_dir }}/etcd.conf.yml"
-    mode: 644
-
-- name: 开机启动 etcd
-  systemd:
-    name: etcd
-    enabled: yes 
-    daemon_reload: yes
+    mode: 600
 
 - name: 启动 etcd
   systemd:
     name: etcd
+    enabled: yes 
+    daemon_reload: yes
     state: restarted
 
 - name: etcd 健康检查

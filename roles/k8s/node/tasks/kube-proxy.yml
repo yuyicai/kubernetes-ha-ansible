@@ -38,13 +38,9 @@
     dest: "{{ kube_bin_dir }}/kube-proxy"
     mode: 755
 
-- name: 设置开机启动 kube-proxy
+- name: 启动 kube-proxy
   systemd:
     name: kube-proxy
     enabled: yes 
     daemon_reload: yes
-
-- name: 启动 kube-proxy
-  systemd:
-    name: kube-proxy
     state: restarted

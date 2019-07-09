@@ -1,24 +1,30 @@
 - hosts: localhost
+  gather_facts: false
   roles:
   - {role: download, tags: download}
 
 - hosts: kube-cluster
+  gather_facts: false
   roles:
   - {role: cri/docker, tags: cri}
 
 - hosts: localhost
+  gather_facts: false
   roles:
   - {role: etcd/pki, tags: ["etcd-pki", "all-pki"]}
 
 - hosts: etcd
+  gather_facts: false
   roles:
   - {role: etcd/etcd, tags: etcd}
 
 - hosts: localhost
+  gather_facts: false
   roles:
   - {role: k8s/pki, tags: ["k8s-pki", "all-pki"]}
 
 - hosts: kube-master
+  gather_facts: false
   roles:
   - {role: k8s/master, tags: master}
 
@@ -28,9 +34,11 @@
   - {role: k8s/node, tags: node}
 
 - hosts: kube-master
+  gather_facts: false
   roles:
   - {role: addons/network/flannel, tags: ["network", "addons"]}
 
 - hosts: kube-master
+  gather_facts: false
   roles:
   - {role: addons/coredns, tags: ["coredns", "addons"]}

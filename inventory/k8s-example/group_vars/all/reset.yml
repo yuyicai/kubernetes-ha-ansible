@@ -2,3 +2,9 @@
 
 # 清理集群时是否清理二进制文件
 delete_bin: true
+
+# 清理iptables
+flush_iptables: true
+
+# 重置容器运行时
+reset_cri: true

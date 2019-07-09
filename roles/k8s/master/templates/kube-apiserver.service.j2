@@ -29,6 +29,7 @@ ExecStart={{ kube_bin_dir }}/kube-apiserver \
     --secure-port=6443 \
     --service-account-key-file={{ kube_dir }}/pki/sa.pub \
     --service-cluster-ip-range={{ service_CIDR }} \
+    --service-node-port-range={{ service_node_port_range }} \
     --tls-cert-file={{ apiserver_tls_cert_file }} \
     --tls-private-key-file={{ apiserver_tls_private_key_file }}
 Restart=on-failure

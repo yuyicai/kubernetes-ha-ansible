@@ -72,19 +72,11 @@
     dest: "{{ etcd_pki_dir }}/ca.crt"
     mode: 0600
 
-- name: 设置开机启动 kube-apiserver、kube-controller-manager、kube-scheduler
+- name: 启动 kube-apiserver、kube-controller-manager、kube-scheduler
   systemd:
     name: "{{ item }}"
     enabled: yes 
     daemon_reload: yes
-  with_items:
-    - kube-apiserver
-    - kube-controller-manager
-    - kube-scheduler
-
-- name: 启动 kube-apiserver、kube-controller-manager、kube-scheduler
-  systemd:
-    name: "{{ item }}"
     state: restarted
   with_items:
     - kube-apiserver
@@ -99,7 +91,7 @@
     client_key: "{{ kube_dir }}/pki/ca.key"
   register: apiserver_health_check
   until: apiserver_health_check.status == 200
-  retries: 20
+  retries: 50
   delay: 5
 
 - name: scheduler 健康检查
@@ -117,3 +109,13 @@
   until: controller_manager_result.status == 200
   retries: 20
   delay: 5
+
+- name: 配置 kubectl 命令补全
+  shell: "{{ kube_bin_dir }}/kubectl completion bash >/etc/bash_completion.d/kubectl"
+
+- name: 配置 kubectl 命令补全文件权限
+  file:
+    path: /etc/bash_completion.d/kubectl
+    owner: root
+    group: root
+    mode: 0755

@@ -13,6 +13,8 @@ service_CIDR: 10.96.0.0/12
 cluster_service_IP: 10.96.0.1
 # 集群DNS地址
 cluster_dns_IP: 10.96.0.10
+# nodeport端口范围
+service_node_port_range: "30000-32767"
 
 # k8s安装目录
 kube_bin_dir: /usr/local/bin
@@ -32,6 +34,9 @@ kube_proxy_mode: ipvs
 nginx_proxy_healthcheck_port: 8089
 # nginx-proxy 服务端口
 nginx_proxy_port: 8443
+
+# master 节点打污点
+master_taint: true
 
 # DNS 配置
 # https://github.com/coredns/coredns/tree/master/plugin/loop

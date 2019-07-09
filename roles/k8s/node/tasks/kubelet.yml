@@ -48,7 +48,7 @@
   template:
     src: "{{ localhost_dir }}/pki/ca.crt"
     dest: "{{ kube_dir }}/pki/ca.crt"
-    mode: 0644
+    mode: 0600
 
 - name: 分发 kubelet confing 文件
   template:
@@ -62,13 +62,9 @@
     dest: "{{ kube_bin_dir }}/kubelet"
     mode: 755
 
-- name: 设置开机启动 kubelet
+- name: 启动 kubelet
   systemd:
     name: kubelet
     enabled: yes 
     daemon_reload: yes
-
-- name: 启动 kubelet
-  systemd:
-    name: kubelet
     state: restarted

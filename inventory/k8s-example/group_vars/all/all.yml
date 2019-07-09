@@ -4,3 +4,6 @@
 # {{ localhost_dir }}/conf 存放配置相关
 # {{ localhost_dir }}/files 下载文件相关
 localhost_dir: "{{ playbook_dir }}/kube-cluster"
+
+# 证书有效期，以天为单位
+cert_expiry: 3650

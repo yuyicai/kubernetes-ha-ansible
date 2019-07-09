@@ -37,6 +37,7 @@
   with_items:
     - filter
     - nat
+  when: flush_iptables | bool
 
 - name: 清理 ipvc
   shell: "ipvsadm -C"
@@ -82,6 +83,7 @@
     - docker
     - containerd
   failed_when: false
+  when: reset_cri | bool
 
 - name: 清理services 文件
   file:
@@ -94,8 +96,15 @@
     - kube-controller-manager
     - kube-scheduler
     - etcd
+
+- name: 清理容器运行时 services 文件
+  file:
+    path: "/etc/systemd/system/{{ item }}.service"
+    state: absent
+  with_items:
     - docker
     - containerd
+  when: reset_cri | bool
 
 - name: systemctl daemon-reload
   systemd:
@@ -156,6 +165,8 @@
   when:
     - delete_bin | bool
     - docker_ver_less_than_18_09 | bool
+    - reset_cri | bool
+    
 
 - name: 清理docker二进制文件
   file:
@@ -174,6 +185,7 @@
   when:
     - delete_bin | bool
     - not docker_ver_less_than_18_09 | bool
+    - reset_cri | bool
 
 - name: 重启网络
   systemd:

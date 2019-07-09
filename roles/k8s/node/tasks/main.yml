@@ -14,3 +14,29 @@
 - import_tasks: kubelet.yml
 
 - import_tasks: kube-proxy.yml
+
+- name: 等待node加入集群
+  shell: |
+    kubectl get node {{ node_name }}
+  register: node_check
+  until: node_check.rc == 0
+  retries: 100
+  delay: 5
+  failed_when: false
+  changed_when: false
+  delegate_to: "{{ groups['kube-master']|first }}"
+
+- name: master 节点污点处理、打标签
+  shell: |
+    {{ kube_bin_dir }}/kubectl taint nodes {{ node_name }} node-role.kubernetes.io/master="":NoSchedule
+  delegate_to: "{{ groups['kube-master']|first }}"
+  when: 
+    - master_taint | bool
+    - inventory_hostname in groups['kube-master']
+
+- name: 节点打标签
+  vars:
+    node_role: "{% if inventory_hostname in groups['kube-master'] %}master{% else %}node{% endif %}"
+  shell: |
+    {{ kube_bin_dir }}/kubectl label --overwrite node {{ node_name }} kubernetes.io/role={{node_role}}
+  delegate_to: "{{ groups['kube-master']|first }}"

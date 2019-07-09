@@ -18,7 +18,7 @@
     creates: ca.key
 
 - name: 生成 etcd ca.crt
-  shell: openssl req -x509 -new -nodes -key ca.key -config etcd-csr.conf -subj "/CN=etcd-ca" -extensions v3_ca -days 3650 -out ca.crt
+  shell: openssl req -x509 -new -nodes -key ca.key -config etcd-csr.conf -subj "/CN=etcd-ca" -extensions v3_ca -days {{ cert_expiry }} -out ca.crt
   args:
     chdir: "{{ localhost_dir }}/pki/etcd"
     creates: ca.crt
@@ -27,7 +27,7 @@
   shell: |
     openssl genrsa -out server-{{ hostvars[ item ].etcd_name }}.key 2048
     openssl req -new  -key server-{{ hostvars[ item ].etcd_name }}.key -subj "/CN=etcd-server" -reqexts v3_ext_peer -config <(cat etcd-csr.conf <(printf "\nIP.2 = {{ item }}")) -out server-{{ hostvars[ item ].etcd_name }}.csr
-    openssl x509 -in server-{{ hostvars[ item ].etcd_name }}.csr -req -CA ca.crt -CAkey ca.key -CAcreateserial -extensions v3_ext_peer -extfile <(cat etcd-csr.conf <(printf "\nIP.2 = {{ item }}")) -days 3650 -out server-{{ hostvars[ item ].etcd_name }}.crt
+    openssl x509 -in server-{{ hostvars[ item ].etcd_name }}.csr -req -CA ca.crt -CAkey ca.key -CAcreateserial -extensions v3_ext_peer -extfile <(cat etcd-csr.conf <(printf "\nIP.2 = {{ item }}")) -days {{ cert_expiry }} -out server-{{ hostvars[ item ].etcd_name }}.crt
   args:
     chdir: "{{ localhost_dir }}/pki/etcd"
     executable: /bin/bash
@@ -38,7 +38,7 @@
   shell: |
     openssl genrsa -out peer-{{ hostvars[ item ].etcd_name }}.key 2048
     openssl req -new  -key peer-{{ hostvars[ item ].etcd_name }}.key -subj "/CN=etcd-peer" -reqexts v3_ext_peer -config <(cat etcd-csr.conf <(printf "\nIP.2 = {{ item }}")) -out peer-{{ hostvars[ item ].etcd_name }}.csr
-    openssl x509 -in peer-{{ hostvars[ item ].etcd_name }}.csr -req -CA ca.crt -CAkey ca.key -CAcreateserial -extensions v3_ext_peer -extfile <(cat etcd-csr.conf <(printf "\nIP.2 = {{ item }}")) -days 3650 -out peer-{{ hostvars[ item ].etcd_name }}.crt
+    openssl x509 -in peer-{{ hostvars[ item ].etcd_name }}.csr -req -CA ca.crt -CAkey ca.key -CAcreateserial -extensions v3_ext_peer -extfile <(cat etcd-csr.conf <(printf "\nIP.2 = {{ item }}")) -days {{ cert_expiry }} -out peer-{{ hostvars[ item ].etcd_name }}.crt
   args:
     chdir: "{{ localhost_dir }}/pki/etcd"
     executable: /bin/bash

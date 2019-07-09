@@ -4,10 +4,12 @@
       copy:
         src: tls-bootstrap-binding.yml
         dest: "{{ kube_dir }}/tls-bootstrap-binding.yml"
+      when: inventory_hostname in groups['kube-cluster']
 
     - name: 允许system:bootstrappers用户组创建并且自动批准CSR、允许system:nodes用户组自动更新CSR
       shell: |
         {{ kube_bin_dir }}/kubectl apply -f {{ kube_dir }}/tls-bootstrap-binding.yml
+      when: inventory_hostname in groups['kube-cluster']
 
     - name: 生成token-id
       shell: |
@@ -22,7 +24,7 @@
     - name: 设置token有效期
       shell: |
         date -u -d '1 day' +'%FT%TZ'
-      register: expiration
+      register: token_expiration
 
     - name: 配置token
       shell: >-
@@ -31,7 +33,7 @@
         --from-literal description="tls bootstrap token"
         --from-literal token-id={{ token_id.stdout }}
         --from-literal token-secret={{ token_secret.stdout }}
-        --from-literal expiration={{ expiration.stdout }}
+        --from-literal expiration={{ token_expiration.stdout }}
         --from-literal usage-bootstrap-authentication=true
         --from-literal usage-bootstrap-signing=true
   delegate_to: "{{ groups['kube-master']|first }}"
