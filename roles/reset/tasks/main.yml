@@ -104,7 +104,21 @@
   with_items:
     - docker
     - containerd
-  when: reset_cri | bool
+  when: 
+    - reset_cri | bool
+    - docker_install == "bin"
+
+- name: 卸载 docker (yum)
+  package:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd
+    state: absent
+  ignore_errors: yes
+  when: 
+    - docker_install == "repo"
+    - reset_cri | bool
 
 - name: systemctl daemon-reload
   systemd:
@@ -166,6 +180,7 @@
     - delete_bin | bool
     - docker_ver_less_than_18_09 | bool
     - reset_cri | bool
+    - docker_install == "bin"
     
 
 - name: 清理docker二进制文件
@@ -186,6 +201,7 @@
     - delete_bin | bool
     - not docker_ver_less_than_18_09 | bool
     - reset_cri | bool
+    - docker_install == "bin"
 
 - name: 重启网络
   systemd:

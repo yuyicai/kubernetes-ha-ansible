@@ -1,0 +1,58 @@
+---
+- block:
+    - name: 添加docker安装源key
+      apt_key:
+        url: "{{ docker_repo_base_url }}/{{ ansible_distribution|lower }}/gpg"
+        state: present
+
+    - name: 添加 docker apt安装源
+      apt_repository:
+        repo: >-
+          deb {{ docker_repo_base_url }}/{{ ansible_distribution|lower }}
+          {{ ansible_distribution_release|lower }}
+          stable
+        state: present
+        filename: docker-ce
+
+    - name: 安装 docker (apt)
+      vars:
+        docker_ce_version: "{% if docker_ver_less_than_18_09 %}{{ docker_ver.split('-')[0] }}~ce~3-0~{{ ansible_distribution|lower }}{% else %}5:{{ docker_ver }}~3-0~{{ ansible_distribution|lower }}-{{ ansible_distribution_release|lower }}{% endif %}"
+      package:
+        name: docker-ce={{ docker_ce_version }}
+        state: present
+      notify: restart docker
+  when: ansible_os_family == "Debian"
+
+- block:
+    - name: 添加 docker yum 源
+      yum_repository:
+        name: docker-ce-stable
+        description: Docker CE Stable - $basearch
+        file: docker-ce
+        baseurl: "{{ docker_repo_base_url }}/{{ ansible_distribution|lower }}/7/$basearch/stable"
+        gpgkey: "{{ docker_repo_base_url }}/{{ ansible_distribution|lower }}/gpg"
+        enabled: yes
+        gpgcheck: yes
+
+    - name: 复制 yum.conf
+      copy:
+        src: /etc/yum.conf
+        dest: /etc/yum_docker.conf
+        remote_src: yes
+
+    - name: 配置 yum.conf
+      lineinfile:
+        path: /etc/yum_docker.conf
+        state: present
+        regexp: '^obsoletes='
+        line: 'obsoletes=0'
+
+    - name: 安装 docker (yum)
+      vars: 
+        docker_ce_version: "{% if docker_ver_less_than_18_09 %}{{ docker_ver.split('-')[0] }}.ce-3.el7{% else %}{{ docker_ver }}-3.el7{% endif %}"
+      yum:
+        name: docker-ce-{{docker_ce_version}}
+        state: present
+        conf_file: /etc/yum_docker.conf
+      notify: restart docker
+  when: ansible_os_family == "RedHat"

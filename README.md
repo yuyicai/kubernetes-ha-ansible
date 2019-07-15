@@ -94,6 +94,7 @@
 - 查看集群信息
 
   ```
+  root@ubuntu:~ # kubectl get cs
   NAME                 STATUS    MESSAGE             ERROR
   controller-manager   Healthy   ok                  
   scheduler            Healthy   ok                  
@@ -103,13 +104,14 @@
   ```
 
   ```
-  root@ubuntu:~ # kubectl get no -owide
-  NAME      STATUS   ROLES    AGE     VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
-  master1   Ready    <none>   2m11s   v1.15.0   172.16.16.112   <none>        Ubuntu 18.04.2 LTS   4.15.0-51-generic   docker://18.6.3
-  master2   Ready    <none>   2m12s   v1.15.0   172.16.16.113   <none>        Ubuntu 18.04.2 LTS   4.15.0-51-generic   docker://18.6.3
-  master3   Ready    <none>   2m12s   v1.15.0   172.16.16.114   <none>        Ubuntu 18.04.2 LTS   4.15.0-51-generic   docker://18.6.3
-  worker1   Ready    <none>   113s    v1.15.0   172.16.16.115   <none>        Ubuntu 18.04.2 LTS   4.15.0-51-generic   docker://18.6.3
-  worker2   Ready    <none>   113s    v1.15.0   172.16.16.116   <none>        Ubuntu 18.04.2 LTS   4.15.0-51-generic   docker://18.6.3
-  worker3   Ready    <none>   112s    v1.15.0   172.16.16.117   <none>        Ubuntu 18.04.2 LTS   4.15.0-51-generic   docker://18.6.3
-  worker4   Ready    <none>   112s    v1.15.0   172.16.16.118   <none>        Ubuntu 18.04.2 LTS   4.15.0-51-generic   docker://18.6.3
+  root@ubuntu:~ # kubectl get nodes -o wide
+  NAME      STATUS   ROLES    AGE     VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                KERNEL-VERSION              CONTAINER-RUNTIME
+  master1   Ready    master   4m40s   v1.15.0   172.16.16.112   <none>        Ubuntu 18.04.2 LTS      4.15.0-51-generic           docker://18.9.7
+  master2   Ready    master   4m40s   v1.15.0   172.16.16.113   <none>        Ubuntu 18.04.2 LTS      4.15.0-51-generic           docker://18.9.7
+  master3   Ready    master   4m40s   v1.15.0   172.16.16.114   <none>        Ubuntu 18.04.2 LTS      4.15.0-51-generic           docker://18.9.7
+  worker1   Ready    node     4m20s   v1.15.0   172.16.16.115   <none>        Ubuntu 18.04.2 LTS      4.15.0-51-generic           docker://18.9.7
+  worker2   Ready    node     4m19s   v1.15.0   172.16.16.116   <none>        Ubuntu 18.04.2 LTS      4.15.0-51-generic           docker://18.9.7
+  worker3   Ready    node     4m18s   v1.15.0   172.16.16.117   <none>        Ubuntu 18.04.2 LTS      4.15.0-51-generic           docker://18.9.7
+  worker4   Ready    node     3m44s   v1.15.0   172.16.16.118   <none>        Ubuntu 18.04.2 LTS      4.15.0-51-generic           docker://18.9.7
+  worker5   Ready    node     4m19s   v1.15.0   172.16.20.12    <none>        CentOS Linux 7 (Core)   3.10.0-862.6.3.el7.x86_64   docker://18.9.7
   ```

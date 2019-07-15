@@ -1,1 +1,4 @@
 docker_ver_less_than_18_09: "{{ docker_ver is version('18.09.0', '<') }}"
+
+# docker 安装源
+docker_repo_base_url: "https://mirrors.aliyun.com/docker-ce/linux"

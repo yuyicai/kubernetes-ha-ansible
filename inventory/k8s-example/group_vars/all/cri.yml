@@ -6,5 +6,11 @@ docker_ver: 18.09.7
 # 检查docker版本是否是18.09以下，即是18.06.x-ce版本
 docker_ver_less_than_18_09: "{{ docker_ver is version('18.09.0', '<') }}"
 
-# docker安装目录
+# docker安装目录 docker_install == bin 的时候使用
 docker_bin_dir: /usr/local/bin
+
+# docker安装方式，二进制：bin、源仓库安装：repo（即ubuntu用apt安装，centos用yum安装）
+docker_install: bin
+
+# docker 安装源
+docker_repo_base_url: "https://mirrors.aliyun.com/docker-ce/linux"

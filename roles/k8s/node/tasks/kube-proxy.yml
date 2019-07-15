@@ -5,7 +5,6 @@
     state: directory
   with_items:
    - "{{ kube_dir }}"
-   - /var/lib/kube-proxy
 
 - name: 分发 kube-proxy kubeconfig 配置
   template:
