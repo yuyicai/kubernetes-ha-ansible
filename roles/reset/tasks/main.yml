@@ -160,7 +160,6 @@
   ignore_errors: yes
   when: 
     - delete_bin | bool
-    - reset_cri | bool
 
 - name: 清理容器运行时相关二进制文件
   file:
