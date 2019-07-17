@@ -1,0 +1,10 @@
+---
+- name: 分发 containerd 二进制文件
+  unarchive:
+    src: "{{ localhost_dir }}/files/cri-containerd-{{ containerd_ver }}.linux-amd64.tar.gz"
+    dest: /
+  notify: restart containerd
+
+- name: restart containerd
+  command: /bin/true
+  notify: restart containerd

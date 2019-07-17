@@ -1,0 +1,9 @@
+---
+dependencies:
+  - role: cri/containerd
+    when:
+      - container_engine == "containerd"
+
+  - role: cri/docker
+    when:
+      - container_engine == "docker"

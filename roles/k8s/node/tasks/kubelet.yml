@@ -9,28 +9,10 @@
    - "{{ kube_dir }}/pki"
    - /var/lib/kubelet
 
-- name: 分发 CNI 插件
-  copy:
-    src: "{{ localhost_dir }}/files/cni-plugins-{{ cni_ver }}/{{ item }}"
-    dest: "{{ cni_bin_dir }}/{{ item }}"
-    mode: 0755
-  with_items:
-    - bandwidth
-    - bridge
-    - dhcp
-    - firewall
-    - flannel
-    - host-device
-    - host-local
-    - ipvlan
-    - loopback
-    - macvlan
-    - portmap
-    - ptp
-    - sbr
-    - static
-    - tuning
-    - vlan
+- name: 分发 cni 组件
+  unarchive:
+    src: "{{ localhost_dir }}/files/cni-plugins-linux-amd64-{{ cni_ver }}.tgz"
+    dest: "{{ cni_bin_dir }}"
 
 - name: 分发 kubelet service 文件
   template:

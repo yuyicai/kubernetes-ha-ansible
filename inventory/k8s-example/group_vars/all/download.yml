@@ -4,9 +4,15 @@
 # https://mirror.azure.cn/docker-ce/linux/static/stable/x86_64/docker-{{ docker_ver }}.tgz 
 docker_download_url: https://mirrors.aliyun.com/docker-ce/linux/static/stable/x86_64/docker-{{ docker_ver }}.tgz 
 
+# containerd 下载地址
+# https://storage.googleapis.com/cri-containerd-release/cri-containerd-1.2.7.linux-amd64.tar.gz
+# https://mirror.azure.cn/kubernetes/containerd/cri-containerd-1.2.7.linux-amd64.tar.gz
+containerd_download_url: https://mirror.azure.cn/kubernetes/containerd/cri-containerd-{{ containerd_ver }}.linux-amd64.tar.gz
+
 # etcd下载地址
 # https://github.com/etcd-io/etcd/releases/download/{{ etcd_ver }}/etcd-{{ etcd_ver }}-linux-amd64.tar.gz 
 # https://storage.googleapis.com/etcd/{{ etcd_ver }}/etcd-{{ etcd_ver }}-linux-amd64.tar.gz 
+# https://mirror.azure.cn/kubernetes/etcd/etcd-{{ etcd_ver }}-linux-amd64.tar.gz 
 etcd_download_url: https://storage.googleapis.com.cnpmjs.org/etcd/{{ etcd_ver }}/etcd-{{ etcd_ver }}-linux-amd64.tar.gz 
 
 # cni 下载地址

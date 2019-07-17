@@ -2,40 +2,40 @@
 - name: restart docker
   command: /bin/true
   notify:
-    - enable containerd
-    - enable docker
-    - reload systemd
-    - reload containerd
-    - reload docker
-    - wait for docker
+    - docker | enable containerd
+    - docker | enable docker
+    - docker | reload systemd
+    - docker | reload containerd
+    - docker | reload docker
+    - docker | wait for docker
 
-- name: enable containerd
+- name: docker | enable containerd
   systemd:
     name: containerd
     enabled: yes
   when: not docker_ver_less_than_18_09 | bool
 
-- name: enable docker
+- name: docker | enable docker
   systemd:
     name: docker
     enabled: yes
 
-- name: reload systemd
+- name: docker | reload systemd
   systemd:
     daemon_reload: yes
 
-- name: reload containerd
+- name: docker | reload containerd
   systemd:
     name: containerd
     state: restarted
   when: not docker_ver_less_than_18_09 | bool
 
-- name: reload docker
+- name: docker | reload docker
   systemd:
     name: docker
     state: restarted
 
-- name: wait for docker
+- name: docker | wait for docker
   command: "{% if docker_install == 'bin' %}{{ docker_bin_dir }}{% else %}/usr/bin{% endif %}/docker ps"
   register: docker_ready
   retries: 20

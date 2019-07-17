@@ -6,7 +6,7 @@
 - hosts: kube-cluster
   gather_facts: false
   roles:
-  - {role: cri/docker, tags: cri}
+  - {role: cri, tags: cri}
 
 - hosts: localhost
   gather_facts: false
@@ -29,6 +29,7 @@
   - {role: k8s/master, tags: master}
 
 - hosts: kube-cluster
+  gather_facts: false
   roles:
   - {role: k8s/sys-setup, tags: node}
   - {role: k8s/node, tags: node}

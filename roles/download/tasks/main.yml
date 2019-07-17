@@ -6,13 +6,24 @@
   with_items:
    - "{{ localhost_dir }}/files/etcd-{{ etcd_ver }}"
    - "{{ localhost_dir }}/files/k8s-{{ kube_ver }}"
-   - "{{ localhost_dir }}/files/docker-{{ docker_ver }}"
-   - "{{ localhost_dir }}/files/cni-plugins-{{ cni_ver }}"
 
-- import_tasks: docker.yml
+- name: 下载 cni 插件
+  get_url:
+    url: "{{ cni_download_url }}"
+    dest: "{{ localhost_dir }}/files/cni-plugins-linux-amd64-{{ cni_ver }}.tgz"
+
+- name: 下载 docker 组件
+  get_url:
+    url: "{{ docker_download_url }}"
+    dest: "{{ localhost_dir }}/files/docker-{{ docker_ver }}.tgz"
+  when: container_engine == "docker"
+
+- name: 下载 containerd 组件
+  get_url:
+    url: "{{ containerd_download_url }}"
+    dest: "{{ localhost_dir }}/files/cri-containerd-{{ containerd_ver }}.linux-amd64.tar.gz"
+  when: container_engine == "containerd"
 
 - import_tasks: etcd.yml
 
 - import_tasks: k8s.yml
-
-- import_tasks: cni.yml

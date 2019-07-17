@@ -18,10 +18,3 @@
 
 - import_tasks: ipvs.yml
   when: kube_proxy_mode == 'ipvs'
-
-- name: 重启 docker
-  systemd:
-    name: docker
-    enabled: yes
-    daemon_reload: yes
-    state: restarted

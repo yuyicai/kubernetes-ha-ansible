@@ -1,0 +1,29 @@
+---
+- name: restart containerd
+  command: /bin/true
+  notify:
+    - containerd | enable containerd
+    - containerd | reload systemd
+    - containerd | reload containerd
+    - containerd | wait for containerd
+
+- name: containerd | enable containerd
+  systemd:
+    name: containerd
+    enabled: yes
+
+- name: containerd | reload systemd
+  systemd:
+    daemon_reload: yes
+
+- name: containerd | reload containerd
+  systemd:
+    name: containerd
+    state: restarted
+
+- name: containerd | wait for containerd
+  command: "ctr c ls"
+  register: containerd_ready
+  retries: 20
+  delay: 1
+  until: containerd_ready.rc == 0

@@ -1,0 +1,2 @@
+# containerd 安装源
+docker_repo_base_url: "https://mirrors.aliyun.com/docker-ce/linux"

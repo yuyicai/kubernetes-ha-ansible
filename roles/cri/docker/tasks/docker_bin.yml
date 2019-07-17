@@ -1,40 +1,10 @@
 ---
-- name: 创建 docker 相关文件夹
-  file:
-    path: /etc/docker
-    state: directory
-
-- name: 分发 docker 二进制文件(18.06.x)
-  copy:
-    src: "{{ localhost_dir }}/files/docker-{{ docker_ver }}/{{ item }}"
-    dest: "{{ docker_bin_dir }}"
-    mode: 0755
-  with_items:
-    - docker
-    - docker-containerd
-    - docker-containerd-ctr
-    - docker-containerd-shim
-    - dockerd
-    - docker-init
-    - docker-proxy
-    - docker-runc
-  when: docker_ver_less_than_18_09 | bool
-
 - name: 分发 docker 二进制文件
-  copy:
-    src: "{{ localhost_dir }}/files/docker-{{ docker_ver }}/{{ item }}"
+  unarchive:
+    src: "{{ localhost_dir }}/files/docker-{{ docker_ver }}.tgz"
     dest: "{{ docker_bin_dir }}"
-    mode: 0755
-  with_items:
-    - containerd
-    - containerd-shim
-    - ctr
-    - docker
-    - dockerd
-    - docker-init
-    - docker-proxy
-    - runc
-  when: not docker_ver_less_than_18_09 | bool
+    extra_opts:
+    - --strip-components=1
 
 - name: 创建 containerd.service 文件
   template:

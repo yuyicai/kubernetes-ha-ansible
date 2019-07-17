@@ -1,5 +1,8 @@
 # 运行时相关变量
+# 容器运行时：docker、containerd
+container_engine: docker
 
+# ------------docker------------ #
 # docker版本 18.06.3-ce、18.09.7
 # 注意18.09.x后面是没有"-ce"的
 docker_ver: 18.09.7
@@ -12,5 +15,12 @@ docker_bin_dir: /usr/local/bin
 # docker安装方式，二进制：bin、源仓库安装：repo（即ubuntu用apt安装，centos用yum安装）
 docker_install: bin
 
-# docker 安装源
+# docker/containerd 安装源
 docker_repo_base_url: "https://mirrors.aliyun.com/docker-ce/linux"
+
+# ------------containerd------------ #
+# containerd 版本，使用源安装时安装最新版
+containerd_ver: 1.2.6
+
+# containerd 安装方式，二进制：bin、源仓库安装：repo（即ubuntu用apt安装，centos用yum安装）
+containerd_install: repo

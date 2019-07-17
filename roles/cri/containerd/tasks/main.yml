@@ -1,0 +1,6 @@
+---
+- include_tasks: containerd_bin.yml
+  when: containerd_install == "bin"
+
+- include_tasks: containerd_repo.yml
+  when: containerd_install == "repo"
