@@ -16,13 +16,17 @@
   get_url:
     url: "{{ docker_download_url }}"
     dest: "{{ localhost_dir }}/files/docker-{{ docker_ver }}.tgz"
-  when: container_engine == "docker"
+  when: 
+    - container_engine == "docker"
+    - docker_install == "bin"
 
 - name: 下载 containerd 组件
   get_url:
     url: "{{ containerd_download_url }}"
     dest: "{{ localhost_dir }}/files/cri-containerd-{{ containerd_ver }}.linux-amd64.tar.gz"
-  when: container_engine == "containerd"
+  when: 
+    - container_engine == "containerd"
+    - containerd_install == "bin"
 
 - import_tasks: etcd.yml
 

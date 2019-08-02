@@ -6,6 +6,10 @@ Documentation=https://kubernetes.io/docs/home/
 ExecStart={{ kube_bin_dir }}/kubelet \
     --network-plugin=cni \
     --config={{ kube_dir }}/kubelet-config.yaml \
+{% if container_engine == "containerd" %}
+    --container-runtime=remote \
+    --container-runtime-endpoint=/run/containerd/containerd.sock \
+{% endif %}
     --hostname-override={{ hostname_override }} \
     --pod-infra-container-image={{ pod_infra_container_image }} \
     --bootstrap-kubeconfig={{ kube_dir }}/bootstrap-kubelet.conf \

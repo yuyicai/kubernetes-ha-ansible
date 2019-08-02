@@ -1,7 +1,10 @@
 # k8s集群相关变量
 
 # k8s版本
-kube_ver: v1.15.0
+kube_ver: v1.15.1
+
+# k8s安装源
+kube_repo_base_url: https://mirrors.aliyun.com/kubernetes
 
 # pod IP段
 cluster_CIDR: 10.244.0.0/16

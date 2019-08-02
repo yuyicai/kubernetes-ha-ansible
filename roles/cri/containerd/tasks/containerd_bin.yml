@@ -5,6 +5,3 @@
     dest: /
   notify: restart containerd
 
-- name: restart containerd
-  command: /bin/true
-  notify: restart containerd

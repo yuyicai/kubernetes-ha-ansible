@@ -1,11 +1,11 @@
 ---
 - block:
-    - name: 添加docker安装源key
+    - name: 添加 containerd 安装源 key
       apt_key:
         url: "{{ docker_repo_base_url }}/{{ ansible_distribution|lower }}/gpg"
         state: present
 
-    - name: 添加 docker apt安装源
+    - name: 添加 containerd apt 安装源
       apt_repository:
         repo: >-
           deb {{ docker_repo_base_url }}/{{ ansible_distribution|lower }}
@@ -14,15 +14,32 @@
         state: present
         filename: docker-ce
 
+    - name: 添加 cri-tools 安装源 key
+      apt_key:
+        url: "{{ kube_repo_base_url }}/apt/doc/apt-key.gpg"
+        state: present
+
+    - name: 添加 cri-tools apt 安装源
+      apt_repository:
+        repo: >-
+          deb {{ kube_repo_base_url }}/apt/ kubernetes-xenial main
+        state: present
+        filename: kubernetes
+
     - name: 安装 containerd (apt)
       package:
         name: containerd
         state: present
-      notify: restart docker
+      notify: restart containerd
+
+    - name: 安装 cri-tools (apt)
+      package:
+        name: cri-tools
+        state: present
   when: ansible_os_family == "Debian"
 
 - block:
-    - name: 添加 docker yum 源
+    - name: 添加 containerd yum 源
       yum_repository:
         name: docker-ce-stable
         description: Docker CE Stable - $basearch
@@ -36,5 +53,22 @@
       yum:
         name: containerd
         state: present
-      notify: restart docker
+      notify: restart containerd
+
+    - name: 添加 cri-tools yum 源
+      yum_repository:
+        name: kubernetes
+        description: kubernetes
+        file: kubernetes
+        baseurl: "{{ kube_repo_base_url }}/yum/repos/kubernetes-el7-x86_64"
+        gpgkey: "{{ kube_repo_base_url }}/yum/doc/yum-key.gpg {{ kube_repo_base_url }}/yum/doc/rpm-package-key.gpg"
+        enabled: yes
+        gpgcheck: yes
+        repo_gpgcheck: yes
+
+    - name: 安装 cri-tools (yum)
+      yum:
+        name: cri-tools
+        state: present
+      notify: restart containerd
   when: ansible_os_family == "RedHat"

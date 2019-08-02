@@ -4,7 +4,6 @@
   - {role: download, tags: download}
 
 - hosts: kube-cluster
-  gather_facts: false
   roles:
   - {role: cri, tags: cri}
 
@@ -29,7 +28,6 @@
   - {role: k8s/master, tags: master}
 
 - hosts: kube-cluster
-  gather_facts: false
   roles:
   - {role: k8s/sys-setup, tags: node}
   - {role: k8s/node, tags: node}

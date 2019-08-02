@@ -13,12 +13,21 @@
     - etcd
   failed_when: false
 
-- name: 清理所有容器
+- name: 清理所有docker容器
   shell: "{{ docker_bin_dir }}/docker ps -aq | xargs -r docker rm -fv"
   register: remove_all_containers
   retries: 4
   until: remove_all_containers.rc == 0
   delay: 5
+  when: container_engine == "docker"
+
+- name: 清理所有containerd容器
+  shell: "{{ docker_bin_dir }}/docker ps -aq | xargs -r docker rm -fv"
+  register: remove_all_containers
+  retries: 4
+  until: remove_all_containers.rc == 0
+  delay: 5
+  when: container_engine == "containerd"
 
 - name: umount kubelet挂载
   shell: mount | grep /var/lib/kubelet/ | awk '{print $3}' | xargs -r umount -f
