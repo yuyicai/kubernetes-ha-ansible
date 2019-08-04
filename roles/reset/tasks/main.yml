@@ -13,20 +13,10 @@
     - etcd
   failed_when: false
 
-- name: 清理所有docker容器
-  shell: "{{ docker_bin_dir }}/docker ps -aq | xargs -r docker rm -fv"
-  register: remove_all_containers
-  retries: 4
-  until: remove_all_containers.rc == 0
-  delay: 5
+- include_tasks: docker.yml
   when: container_engine == "docker"
 
-- name: 清理所有containerd容器
-  shell: "{{ docker_bin_dir }}/docker ps -aq | xargs -r docker rm -fv"
-  register: remove_all_containers
-  retries: 4
-  until: remove_all_containers.rc == 0
-  delay: 5
+- include_tasks: containerd.yml
   when: container_engine == "containerd"
 
 - name: umount kubelet挂载
@@ -83,17 +73,6 @@
   shell: ip link del flannel.1
   when: flannel.stat.exists
 
-- name: 停止 docker
-  systemd:
-    name: "{{ item }}"
-    state: stopped
-    enabled: no
-  with_items:
-    - docker
-    - containerd
-  failed_when: false
-  when: reset_cri | bool
-
 - name: 清理services 文件
   file:
     path: "/etc/systemd/system/{{ item }}.service"
@@ -105,27 +84,6 @@
     - kube-controller-manager
     - kube-scheduler
     - etcd
-
-- name: 清理容器运行时 services 文件
-  file:
-    path: "/etc/systemd/system/{{ item }}.service"
-    state: absent
-  with_items:
-    - docker
-    - containerd
-  when: 
-    - reset_cri | bool
-
-- name: 卸载 docker
-  package:
-    name:
-      - docker-ce
-      - docker-ce-cli
-      - containerd.io
-    state: absent
-  ignore_errors: yes
-  when: 
-    - reset_cri | bool
 
 - name: systemctl daemon-reload
   systemd:
@@ -188,6 +146,7 @@
     - "{{ docker_bin_dir }}/docker-containerd-shim"
     - "{{ docker_bin_dir }}/docker-runc"
     - /usr/local/bin/runc
+    - /usr/local/sbin/runc
     - /usr/local/bin/containerd
     - /usr/local/bin/containerd-shim
     - /usr/local/bin/containerd-shim-runc-v1

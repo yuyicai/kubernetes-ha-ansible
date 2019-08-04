@@ -28,7 +28,7 @@
 
     - name: 安装 containerd (apt)
       package:
-        name: containerd
+        name: containerd.io
         state: present
       notify: restart containerd
 
@@ -51,7 +51,7 @@
 
     - name: 安装 containerd (yum)
       yum:
-        name: containerd
+        name: containerd.io
         state: present
       notify: restart containerd
 

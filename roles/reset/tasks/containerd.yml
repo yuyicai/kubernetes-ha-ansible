@@ -1,0 +1,63 @@
+---
+- name: 停止所有 containerd 容器
+  shell: "crictl ps -aq | xargs -r crictl -t 60s stop"
+  register: containerd_containers
+  retries: 5
+  until: containerd_containers.rc == 0
+  delay: 5
+
+- name: 删除所有 containerd 容器
+  shell: "crictl ps -aq | xargs -r crictl -t 60s rm"
+  register: containerd_containers
+  retries: 5
+  until: containerd_containers.rc == 0
+  delay: 5
+
+- name: 停止所有 pods
+  shell: "crictl pods -q | xargs -r crictl -t 60s stopp"
+  register: containerd_pods
+  retries: 5
+  until: containerd_pods.rc == 0
+  delay: 5
+
+- name: 删除所有 pods
+  shell: "crictl pods -q | xargs -r crictl -t 60s rmp"
+  register: containerd_pods
+  retries: 5
+  until: containerd_pods.rc == 0
+  delay: 5
+
+- name: 停止 containerd
+  systemd:
+    name: containerd
+    state: stopped
+    enabled: no
+  failed_when: false
+  when: reset_cri | bool
+
+- name: 清理容器运行时 services 文件
+  file:
+    path: "/etc/systemd/system/containerd.service"
+    state: absent
+  when: reset_cri | bool
+
+- name: 卸载 containerd
+  package:
+    name: 
+     - containerd.io
+     - cri-tools
+    state: absent
+  ignore_errors: yes
+  when: 
+    - reset_cri | bool
+    - containerd_install == "repo"
+
+- name: 移除 containerd 配置文件
+  file:
+    path: /etc/containerd/config.toml
+    state: absent
+
+- name: 移除 containerd 配置文件
+  file:
+    path: /etc/crictl.yaml
+    state: absent
