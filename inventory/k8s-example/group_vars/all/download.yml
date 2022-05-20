@@ -13,11 +13,11 @@ containerd_download_url: https://mirror.azure.cn/kubernetes/containerd/cri-conta
 # https://github.com/etcd-io/etcd/releases/download/{{ etcd_ver }}/etcd-{{ etcd_ver }}-linux-amd64.tar.gz 
 # https://storage.googleapis.com/etcd/{{ etcd_ver }}/etcd-{{ etcd_ver }}-linux-amd64.tar.gz 
 # https://mirror.azure.cn/kubernetes/etcd/etcd-{{ etcd_ver }}-linux-amd64.tar.gz 
-etcd_download_url: https://storage.googleapis.com.cnpmjs.org/etcd/{{ etcd_ver }}/etcd-{{ etcd_ver }}-linux-amd64.tar.gz 
+etcd_download_url: https://storage.googleapis.com/etcd/{{ etcd_ver }}/etcd-{{ etcd_ver }}-linux-amd64.tar.gz 
 
 # cni 下载地址
 # https://github.com/containernetworking/plugins/releases/download/{{ cni_ver }}/cni-plugins-linux-amd64-{{ cni_ver }}.tgz
 cni_download_url: https://mirror.azure.cn/kubernetes/containernetworking-plugins/cni-plugins-linux-amd64-{{ cni_ver }}.tgz
 
 # k8s二进制组件下载地址：
-kube_download_url: https://storage.googleapis.com.cnpmjs.org/kubernetes-release/release/{{ kube_ver }}/kubernetes-server-linux-amd64.tar.gz
+kube_download_url: https://storage.googleapis.com/kubernetes-release/release/{{ kube_ver }}/kubernetes-server-linux-amd64.tar.gz
